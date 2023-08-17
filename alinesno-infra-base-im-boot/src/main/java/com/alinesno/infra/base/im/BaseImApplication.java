@@ -10,10 +10,10 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
  * @since 2023年8月3日 上午6:23:43
  */
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
-public class BaseimApplication {
+public class BaseImApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BaseimApplication.class, args);
+		SpringApplication.run(BaseImApplication.class, args);
 	}
 
 }
