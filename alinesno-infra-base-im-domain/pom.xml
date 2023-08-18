@@ -13,6 +13,10 @@
 	<artifactId>alinesno-infra-base-im-domain</artifactId>
 	<packaging>jar</packaging>
 
+	<properties>
+		<j-im.version>3.0.0.v20200501-RELEASE</j-im.version>
+	</properties>
+
 	<dependencies>
 
 		<!-- 引用公共门面服务 -->
@@ -26,6 +30,20 @@
 			<groupId>com.alinesno.infra.common</groupId>
 			<artifactId>alinesno-infra-common-core</artifactId>
 			<version>${revision}</version>
+		</dependency>
+
+		<!-- jim-server -->
+		<dependency>
+			<groupId>org.j-im</groupId>
+			<artifactId>jim-server</artifactId>
+			<version>${j-im.version}</version>
+		</dependency>
+
+		<!-- jim-client -->
+		<dependency>
+			<groupId>org.j-im</groupId>
+			<artifactId>jim-client</artifactId>
+			<version>${j-im.version}</version>
 		</dependency>
 
 	</dependencies>
