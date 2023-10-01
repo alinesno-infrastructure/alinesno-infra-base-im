@@ -4,6 +4,7 @@ import com.alinesno.infra.base.im.commond.WsHandshakeProcessor;
 import com.alinesno.infra.base.im.handle.LoginServiceProcessor;
 import com.alinesno.infra.base.im.listener.ImGroupListener;
 import com.alinesno.infra.base.im.listener.ImUserListener;
+import com.alinesno.infra.common.web.adapter.sso.enable.EnableInfraSsoApi;
 import org.jim.core.packets.Command;
 import org.jim.server.JimServer;
 import org.jim.server.command.CommandManager;
@@ -23,6 +24,7 @@ import org.springframework.context.ConfigurableApplicationContext;
  * @author LuoAnDong
  * @since 2023年8月3日 上午6:23:43
  */
+@EnableInfraSsoApi
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 public class BaseImApplication {
 
