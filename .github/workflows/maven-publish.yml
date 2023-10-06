@@ -151,14 +151,7 @@ jobs:
                         -Djib.to.tags=${{ env.PRO_VERSION }}.${{ env.BUILD_NUMBER }} \
                         -Djib.to.auth.username=${{secrets.ALIYUN_CR_USERNAME}} \
                         -Djib.to.auth.password=${{secrets.ALIYUN_CR_PASSWORD}}
-
-      # - name: Install MurphySec code scan cli
-      #   run: |
-      #     wget -q https://s.murphysec.com/release/install.sh -O - | /bin/bash
-
-      # - name: Code scan
-      #   run: murphysec scan . --token ${{ secrets.MURPHYSEC_TOKEN }}
-
+                        
       - name: local remote scp
         uses: cross-the-world/scp-pipeline@master
         with:
@@ -188,7 +181,7 @@ jobs:
             export NAMESPACE=${{ secrets.K8S_NAMESPACE }}
 
             export REDIS_HOST=${{ secrets.DEV_REDIS_HOST }}
-            export INFRA_DEV_DOMAIN=${{ secrets.INFRA_DEV_DOMAIN }}
+            export INFRA_DEV_DOMAIN=${{ secrets.INFRA_BETA_BASE_DOMAIN }}
             export DB_MYSQL_URL=${{ secrets.DEV_DB_MYSQL_URL }}
             export DB_MYSQL_USRENAME=${{ secrets.DEV_DB_MYSQL_USRENAME }}
             export DB_MYSQL_PASSWORD=${{ secrets.DEV_DB_MYSQL_PASSWORD }}
