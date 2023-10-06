@@ -151,7 +151,7 @@ jobs:
                         -Djib.to.tags=${{ env.PRO_VERSION }}.${{ env.BUILD_NUMBER }} \
                         -Djib.to.auth.username=${{secrets.ALIYUN_CR_USERNAME}} \
                         -Djib.to.auth.password=${{secrets.ALIYUN_CR_PASSWORD}}
-
+                        
       - name: local remote scp
         uses: cross-the-world/scp-pipeline@master
         with:
