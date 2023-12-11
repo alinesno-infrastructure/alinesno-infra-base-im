@@ -3,7 +3,7 @@
   <div class="acp-dashboard" style="padding: 0px 10px !important">
     <div class="smart-container">
       <el-row>
-        <el-col :span="19">
+        <el-col :span="18">
           <div class="robot-chat-windows">
             <div class="robot-chat-header">
               <div class="chat-header-title">
@@ -58,9 +58,9 @@
                       </el-button>
                     </el-tooltip>
 
-                    <el-tooltip class="box-item" effect="dark" content="添加Agent到频道中" placement="top" >
-                      <el-button type="primary" text bg size="large" @click="dialogVisible = true" >
-                        <i class="fa-solid fa-truck-fast icon-btn"></i>
+                    <el-tooltip class="box-item" effect="dark" content="上传文档文件" placement="top" >
+                      <el-button type="primary" text bg size="large" @click="handleUploadFile" >
+                        <i class="fa-solid fa-file-word icon-btn"></i>
                       </el-button>
                     </el-tooltip>
 
@@ -71,7 +71,7 @@
           </div>
         </el-col>
 
-        <el-col :span="5">
+        <el-col :span="6">
           <SmartServiceAgent />
         </el-col>
        
@@ -111,12 +111,15 @@
       </template>
     </el-dialog>
 
+    <ChatUploadFile ref="uploadChildComp" />
+
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import ChatList from './chatList'
+import ChatUploadFile from './chatUploadFile'
 
 import {
   chatAssistantContent , 
@@ -142,6 +145,7 @@ const editorLoading = ref(true) ;
 const dialogVisible = ref(false)
 const editDialogVisible = ref(false)
 const currentTaskContent = ref("")
+const uploadChildComp = ref(null) 
 
 const data = reactive({
    form: {},
@@ -217,6 +221,11 @@ function handleSendUserMessage(formattedMessage){
   sendUserMessage(formattedMessage).then(response => {
     chatListRef.value.pushResponseMessageList(response.data);
   })
+}
+
+/** 上传文档文件 */
+function handleUploadFile(){
+  uploadChildComp.value.handleOpenUpload(true);
 }
 
 const removeMention = (userId) => {

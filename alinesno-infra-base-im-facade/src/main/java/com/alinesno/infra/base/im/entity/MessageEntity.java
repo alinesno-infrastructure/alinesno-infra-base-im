@@ -21,8 +21,8 @@ public class MessageEntity extends InfraBaseEntity {
     @Column(type = MySqlTypeConstant.BIGINT, length = 11, isNull = false, comment = "发送者用户ID")
     private Long senderId;
 
-    @Column(type = MySqlTypeConstant.BIGINT, length = 11, isNull = false, comment = "接收者用户ID")
-    private Long receiverId;
+    @Column(type = MySqlTypeConstant.VARCHAR, length = 256, isNull = false, comment = "接收者用户ID")
+    private String receiverId;
 
     @Column(type = MySqlTypeConstant.BIGINT, length = 11, isNull = false, comment = "所属频道ID")
     private Long channelId;

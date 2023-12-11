@@ -1,5 +1,6 @@
 <template>
   <div v-loading="loading">
+
     <el-row>
       <el-col :span="24" style="border-bottom: 1px solid rgb(229, 229, 229);height: 55px;">
         <div class="flex items-center" style="padding: 9px;border-radius: 5px;color: #242e42;">
@@ -14,7 +15,8 @@
                 <span class="text-sm mr-2" style="color: var(--el-text-color-regular);">AIP智能体专家</span>
               </div>
               <router-link target="_blank" to="/dashboard">
-                <el-button type="primary" icon="House" text bg size="default" style="margin-top: 2px;margin-left: 20px;">管理台</el-button>
+                <el-button type="primary" icon="House" text bg size="default"
+                  style="margin-top: 2px;margin-left: 20px;">管理台</el-button>
               </router-link>
             </div>
 
@@ -32,7 +34,7 @@
               <span class="text-sm mr-2" style="margin-left:10px;color: var(--el-text-color-regular);">角色标识 : uvaWo9Es
                 <el-icon>
                   <CopyDocument />
-                </el-icon> 
+                </el-icon>
               </span>
             </div>
 
@@ -42,6 +44,7 @@
       </el-col>
     </el-row>
 
+    <!-- 控制列表 -->
     <el-container style="height: calc(100vh - 56px);">
       <el-aside width="300px" style="background: #fff;padding:10px;border-right:1px solid #e6e6e6">
         <ChatSessionPanel @onSendParams="handleGetParams" />
@@ -55,9 +58,9 @@
 </template>
 
 <script setup>
-// import TheWelcome from '../components/TheWelcome.vue'
 
 import { useRouter } from "vue-router";
+
 import SmartService from './smartService';
 import ChatSessionPanel from './chatSessionPanel';
 
@@ -69,61 +72,6 @@ const textarea = ref('this is a test')
 const loading = ref(false)
 const labelPosition = ref("top")
 const checked1 = ref(false)
-const engineers = ref([{
-  "icon": "",
-  "name": "张三",
-  "id": "",
-  "title": "技术负责人"
-},
-{
-  "icon": "",
-  "name": "李大四",
-  "id": "",
-  "title": "需求工程师"
-},
-{
-  "icon": "",
-  "name": "王五",
-  "id": "",
-  "title": "软件工程师"
-},
-{
-  "icon": "",
-  "name": "赵六",
-  "id": "",
-  "title": "系统架构师"
-},
-{
-  "icon": "",
-  "name": "刘小七",
-  "id": "",
-  "title": "测试工程师"
-},
-{
-  "icon": "",
-  "name": "陈一八",
-  "id": "",
-  "title": "数据工程师"
-},
-{
-  "icon": "",
-  "name": "钱九",
-  "id": "",
-  "title": "网络工程师"
-},
-{
-  "icon": "",
-  "name": "孙十",
-  "id": "",
-  "title": "安全工程师"
-},
-{
-  "icon": "",
-  "name": "周一",
-  "id": "",
-  "title": "前端工程师"
-},
-]);
 
 // do not use same name with ref
 const form = reactive({
@@ -138,11 +86,6 @@ const form = reactive({
 })
 
 import { onMounted, onUnmounted } from "vue"
-// import "codemirror/mode/markdown/markdown.js"
-// import Codemirror from "codemirror-editor-vue3"
-
-// import type { CmComponentRef } from "codemirror-editor-vue3"
-// import type { Editor, EditorConfiguration } from "codemirror"
 
 const systemContent = ref("")
 const userContent = ref("")
@@ -178,14 +121,14 @@ const onReady = (cm) => {
   console.log(cm.focus())
 }
 
-function openDashboard(){
+function openDashboard() {
   // router.push('/dashboard')
   window.open(href.href + '/dashboard', '_blank')
 }
 
 const handleGetParams = (params) => {
   console.log(params) // 传递给父组件的数据
-  loading.value = params ; 
+  loading.value = params;
 }
 
 /** 提交按钮 */
@@ -256,4 +199,6 @@ onUnmounted(() => {
     float: left;
   }
 
-}</style>
+}
+
+</style>

@@ -3,14 +3,14 @@
 
     <!-- 创建频道 -->
     <div class="chatChannel-builder">
-      <el-button type="primary" text bg icon="Link">加入频道</el-button>
-      <el-button type="danger" text bg icon="ChatRound">创建频道</el-button>
+      <el-button type="primary" text bg icon="Link" @click="addChannel">加入频道</el-button>
+      <el-button type="danger" text bg icon="ChatRound" @click="createChannel">创建频道</el-button>
     </div>
 
     <el-scrollbar style="float:left;height:calc(100vh - 200px)">
       <div class="chatChannel-session" :class="index == currentChatChannel ? 'select-chatChannel':''" @click="handleSelectChatChannel(item)" v-for="(item , index) in chatChannel" :key="item">
         <div class="chatChannel-icon">
-          <img :src="'http://data.linesno.com/icons/sepcialist/dataset_' + (index+15)+ '.png'" style="width:40px;height:40px;border-radius: 50%;" />
+          <img :src="'http://data.linesno.com/icons/sepcialist/dataset_' + (index+5)+ '.png'" style="width:40px;height:40px;border-radius: 50%;" />
         </div>
         <div class="chatChannel-title">
           #{{ item.name }}
@@ -20,6 +20,12 @@
         </div>
       </div>
     </el-scrollbar>
+
+    <!-- 频道弹窗 -->
+    <ChannelGroup ref="createChildComp" /> 
+
+    <!-- 频道弹窗 -->
+    <ChannelGroupDiscover ref="addChildComp" /> 
 
   </div>
 </template>
@@ -31,6 +37,11 @@ import {
 } from '@/api/base/im/robot'
 
 import { getParam } from '@/utils/ruoyi'
+import ChannelGroup from "./channelGroup";
+import ChannelGroupDiscover from "./channelGroupDiscover";
+
+const createChildComp = ref(null);
+const addChildComp = ref(null);
 
 const chatChannel = ref([
   { id: '1', name: '公共频道', desc: '这是公共讨论服务频道', icon: '' },
@@ -48,10 +59,10 @@ const currentChatChannel = ref('0') ;
 // 若要动态添加频道并使其 ID 递增，你可以使用类似下面的方法：
 let nextId = chatChannel.value.length + 1;
 
-function addChannel(name, desc) {
-  chatChannel.value.push({ id: String(nextId), name: name, desc: desc, icon: '' });
-  nextId++;
-}
+// function addChannel(name, desc) {
+//   chatChannel.value.push({ id: String(nextId), name: name, desc: desc, icon: '' });
+//   nextId++;
+// }
 
 const emit = defineEmits(['onSendParams'])
 
@@ -70,11 +81,20 @@ function handleSelectChatChannel(item){
 }
 
 
-// 例如，添加新的频道并提供描述信息：
-// addChannel('新频道名称', '这是新频道的描述');
-
 // 检查更新后的 chatChannel
 // console.log(chatChannel.value);
+
+/** 创建频道 */
+function createChannel(){
+  createChildComp.value.handleOpenChannel(true);
+}
+
+// 例如，添加新的频道并提供描述信息：
+// addChannel('新频道名称', '这是新频道的描述');
+/** 加入频道 */
+function addChannel(){
+  addChildComp.value.handleOpenChannel(true);
+}
 
 </script>
 

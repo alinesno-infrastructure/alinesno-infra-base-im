@@ -4,14 +4,16 @@
     <div ref="innerRef">
 
       <div class="robot-chat-ai-say-box" v-for="(item, index) in messageList" 
-        @mouseover="showTools(item)"
-        @mouseleave="hideTools(item)"
-        :key="index">
+          @mouseover="showTools(item)"
+          @mouseleave="hideTools(item)"
+          :key="index">
+
         <div class="chat-ai-header" :class="item.roleType == 'person' ? 'say-right-window' : ''">
           <div class="header-images">
             <img :src="item.icon" />
           </div>
         </div>
+
         <div class="chat-ai-say-body" :class="item.roleType == 'person' ? 'say-right-window' : ''" style="max-width:90%">
           <div class="say-message-info"> {{ item.name }} {{ item.dateTime }}
 

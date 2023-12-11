@@ -9,6 +9,7 @@ import com.alinesno.infra.base.im.dto.ChatMessageDto;
 import com.alinesno.infra.base.im.dto.RobotMessageDto;
 import com.alinesno.infra.base.im.dto.TaskContentDto;
 import com.alinesno.infra.base.im.dto.WebMessageDto;
+import com.alinesno.infra.base.im.service.IMessageService;
 import com.alinesno.infra.common.facade.response.AjaxResult;
 import com.alinesno.infra.common.web.adapter.rest.SuperController;
 import lombok.SneakyThrows;
@@ -31,6 +32,9 @@ public class ImChatController extends SuperController {
     private SmartAssistantConsumer smartAssistantConsumer ;
 
     @Autowired
+    private IMessageService messageService ;
+
+    @Autowired
     private SmartBrainConsumer smartBrainConsumer ;
 
     /**
@@ -51,9 +55,12 @@ public class ImChatController extends SuperController {
      * @return
      */
     @PostMapping("/sendUserMessage")
-    public AjaxResult sendUserMessage(@RequestBody List<WebMessageDto> dtoList){
+    public AjaxResult sendUserMessage(@RequestBody List<WebMessageDto> dtoList , Long channelId){
 
         log.debug("dtoList = {}" , JSONObject.toJSONString(dtoList));
+
+        // 保存消息实体
+        messageService.saveUserMessage(dtoList , channelId) ;
 
         // 提交任务给处理服务，让它后台执行处理
 
