@@ -7,7 +7,14 @@ IM消息服务是一种用于实时通信和消息传递的服务
 
 ## 产品截图
 
+主界面: 
 <img src="/images/product_01.png" />
+
+频道界面:
+<img src="/images/product_02.png" />
+
+频道界面:
+<img src="/images/product_03.png" />
 
 ## 主要功能
 
