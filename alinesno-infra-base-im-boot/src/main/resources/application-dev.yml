@@ -19,6 +19,20 @@ spring:
     restart:
       enabled: true
 
+
+# 自动生成表
+actable:
+  table:
+    auto: update
+  model:
+    pack: com.alinesno.infra.base.im.entity
+  database:
+    type: mysql
+  index:
+    prefix: alinesno_base_im_idx_
+  unique:
+    prefix: alinesno_base_im_uni_
+
 # sa-token配置
 sa-token:
   token-name: satoken

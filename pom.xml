@@ -25,12 +25,12 @@
         <module>alinesno-infra-base-im-facade</module>  <!-- 接口和引用 -->
         <module>alinesno-infra-base-im-domain</module>  <!-- 领域服务 -->
         <module>alinesno-infra-base-im-adapter</module> <!-- 适配层 -->
-        <module>alinesno-infra-base-im-api</module>  <!-- 接口服务 -->
+        <module>alinesno-infra-base-im-gateway</module>  <!-- 接口服务 -->
         <module>alinesno-infra-base-im-client</module>  <!-- 对外引用 -->
         <module>alinesno-infra-base-im-boot</module>  <!-- 启动服务 -->
 
         <!-- 前端服务
-        <module>alinesno-infra-base-im-admin</module>
+        <module>alinesno-infra-base-im-ui</module>
         -->
     </modules>
 

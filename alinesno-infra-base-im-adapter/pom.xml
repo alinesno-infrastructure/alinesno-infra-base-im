@@ -22,6 +22,21 @@
 			<version>${revision}</version>
 		</dependency>
 
-	</dependencies>
+		<!-- 引入forest_starter_start -->
+		<dependency>
+			<groupId>com.dtflys.forest</groupId>
+			<artifactId>forest-spring-boot3-starter</artifactId>
+			<version>${forest.version}</version>
+		</dependency>
+		<!-- 引入forest_starter_end -->
+
+		<!-- fastjson_starter -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+		</dependency>
+		<!-- fastjson_end -->
+
+    </dependencies>
 
 </project>

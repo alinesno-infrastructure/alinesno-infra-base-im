@@ -10,42 +10,37 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>alinesno-infra-base-im-boot</artifactId>
+	<artifactId>alinesno-infra-base-im-gateway</artifactId>
 	<packaging>jar</packaging>
 
 	<dependencies>
 
-        <!-- 引用服务 -->
-		<dependency>
-			<groupId>com.alinesno.infra.common</groupId>
-			<artifactId>alinesno-infra-common-web-api-sso</artifactId>
-			<version>${revision}</version>
-		</dependency>
+		<!-- 引用公共门面服务 -->
 		<dependency>
 			<groupId>com.alinesno.infra.base</groupId>
-			<artifactId>alinesno-infra-base-im-domain</artifactId>
+			<artifactId>alinesno-infra-base-im-facade</artifactId>
 			<version>${revision}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>com.alinesno.infra.base</groupId>
 			<artifactId>alinesno-infra-base-im-adapter</artifactId>
 			<version>${revision}</version>
 		</dependency>
+
 		<dependency>
-			<groupId>com.alinesno.infra.base</groupId>
-			<artifactId>alinesno-infra-base-im-gateway</artifactId>
+			<groupId>com.alinesno.infra.common</groupId>
+			<artifactId>alinesno-infra-common-web-api</artifactId>
 			<version>${revision}</version>
 		</dependency>
 
-    </dependencies>
+		<!-- fastjson_starter -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+		<!-- fastjson_end -->
 
-    <build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+    </dependencies>
 
 </project>

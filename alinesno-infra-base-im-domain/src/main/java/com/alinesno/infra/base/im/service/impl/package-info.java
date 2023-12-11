@@ -1,1 +1,1 @@
-package com.alinesno.infra.base.im.api.provider;
+package com.alinesno.infra.base.im.gateway.provider;
