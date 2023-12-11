@@ -13,9 +13,9 @@ var managerUrl = {
 }
 
 // 客户端发送消息 
-export function sendUserMessage(data) {
+export function sendUserMessage(data , channelId) {
   return request({
-    url: managerUrl.sendUserMessage , 
+    url: managerUrl.sendUserMessage + "?channelId=" + parseStrEmpty(channelId) , 
     data: data,
     method: 'post'
   })
@@ -52,9 +52,9 @@ export function chatAssistantContent(businessId) {
 }
 
 // 运行角色流程
-export function chatMessage(businessId) {
+export function chatMessage(channelId) {
   return request({
-    url: managerUrl.chatMessage + '?businessId=' + parseStrEmpty(businessId),
+    url: managerUrl.chatMessage + '?channelId=' + parseStrEmpty(channelId),
     method: 'get'
   })
 }

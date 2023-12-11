@@ -9,6 +9,7 @@ import com.alinesno.infra.base.im.dto.ChatMessageDto;
 import com.alinesno.infra.base.im.dto.RobotMessageDto;
 import com.alinesno.infra.base.im.dto.TaskContentDto;
 import com.alinesno.infra.base.im.dto.WebMessageDto;
+import com.alinesno.infra.base.im.entity.MessageEntity;
 import com.alinesno.infra.base.im.service.IMessageService;
 import com.alinesno.infra.common.facade.response.AjaxResult;
 import com.alinesno.infra.common.web.adapter.rest.SuperController;
@@ -59,8 +60,7 @@ public class ImChatController extends SuperController {
 
         log.debug("dtoList = {}" , JSONObject.toJSONString(dtoList));
 
-        // 保存消息实体
-        messageService.saveUserMessage(dtoList , channelId) ;
+//        messageService.saveUserMessage(dtoList , channelId) ;
 
         // 提交任务给处理服务，让它后台执行处理
 
@@ -70,10 +70,14 @@ public class ImChatController extends SuperController {
         personDto.setChatText("收到，罗小东的任务我已经在处理，请稍等1-2分钟 :-)");
         personDto.setName("考核题目生成Agent");
         personDto.setRoleType("agent");
+        personDto.setReaderType("html");
         personDto.setBusinessId(IdUtil.getSnowflakeNextIdStr());
         personDto.setDateTime(DateUtil.formatDateTime(new Date()));
         personDto.setIcon("http://data.linesno.com/icons/sepcialist/dataset_23.png");
         personDto.setDateTime(DateUtil.formatDateTime(new Date()));
+
+        // 保存消息实体
+        messageService.saveChatMessage(dtoList , personDto , channelId) ;
 
         return AjaxResult.success(personDto) ;
     }
@@ -119,73 +123,75 @@ public class ImChatController extends SuperController {
      * @return
      */
     @GetMapping("/chatMessage")
-    public AjaxResult chatMessage(String businessId){
+    public AjaxResult chatMessage(String channelId){
 
-        AjaxResult result = smartBrainConsumer.chatContent(businessId) ;
+        List<ChatMessageDto> chatMessageDtos = messageService.listByChannelId(channelId) ;
 
-        log.debug("chatContent result = {}" , result);
+//        AjaxResult result = smartBrainConsumer.chatContent(channelId) ;
+//
+//        log.debug("chatContent result = {}" , result);
+//
+//        String resultData = result.get("data").toString() ;
+//        TaskContentDto ta = null ;
+//        if(resultData != null){
+//            ta =  JSONObject.parseObject(resultData, TaskContentDto.class) ;
+//            List<ChatMessageDto> messageList = new ArrayList<>() ;
+//
+//
+//            ChatMessageDto dto = new ChatMessageDto() ;
+//            dto.setChatText(ta.getGenContent());
+//            dto.setName("高级数据库工程师");
+//            dto.setRoleType("agent");
+//            dto.setBusinessId(IdUtil.getSnowflakeNextIdStr());
+//            dto.setIcon("http://data.linesno.com/icons/sepcialist/dataset_23.png");
+//            dto.setDateTime(DateUtil.formatDateTime(new Date()));
+//            messageList.add(dto) ;
+//
+//            ChatMessageDto dto3 = new ChatMessageDto() ;
+//
+//            String md = "" +
+//                    "### 罗小东的任务已经处理\n" +
+////                    "- 任务：\n" + ta.getGenContent() + "\n" +
+//                    "- 任务: \n" + "请编写关于Ansible的考核题目." + "\n" +
+//                    "- 业务标识: 1733539703232249856\n" +
+//                    "- 持续时间: 46秒503\n" +
+//                    "- 环境: [测试环境](#)\n" +
+//                    "- 内容: [查看生成结果](http://localhost/smart/specialist/index?businessId=1733539703232249856)\n" +
+//                    "- 状态: 完成\n" +
+//                    "- 完成时间: 2023-12-10 01:31:34\n" +
+//                    "- 执行人：培训题设计Agent" +
+//                    "" ;
+//
+//            dto3.setChatText(md);
+//            dto3.setName("高级数据库工程师");
+//            dto3.setRoleType("agent");
+//            dto3.setBusinessId(IdUtil.getSnowflakeNextIdStr());
+//            dto3.setIcon("http://data.linesno.com/icons/sepcialist/dataset_23.png");
+//            dto3.setDateTime(DateUtil.formatDateTime(new Date()));
+//            messageList.add(dto3) ;
+//
+//            ChatMessageDto personDto1 = new ChatMessageDto() ;
+//            personDto1.setChatText("生成一个开发管理服务");
+//            personDto1.setName("考核题目生成Agent");
+//            personDto1.setBusinessId(IdUtil.getSnowflakeNextIdStr());
+//            personDto1.setIcon("https://foruda.gitee.com/avatar/1676897721015308137/41655_landonniao_1656075872.png");
+//            personDto1.setRoleType("person");
+//            personDto1.setDateTime(DateUtil.formatDateTime(new Date()));
+//            messageList.add(personDto1) ;
+//
+//            ChatMessageDto personDto = new ChatMessageDto() ;
+//            personDto.setChatText("收到，罗小东的任务我已经在处理，请稍等1-2分钟 :-)");
+//            personDto.setName("考核题目生成Agent");
+//            personDto.setBusinessId(IdUtil.getSnowflakeNextIdStr());
+//            personDto.setIcon("http://data.linesno.com/icons/sepcialist/dataset_23.png");
+//            personDto.setRoleType("agent");
+//            personDto.setDateTime(DateUtil.formatDateTime(new Date()));
+//            messageList.add(personDto) ;
+//
+//            return AjaxResult.success(messageList) ;
+//        }
 
-        String resultData = result.get("data").toString() ;
-        TaskContentDto ta = null ;
-        if(resultData != null){
-            ta =  JSONObject.parseObject(resultData, TaskContentDto.class) ;
-            List<ChatMessageDto> messageList = new ArrayList<>() ;
-
-
-            ChatMessageDto dto = new ChatMessageDto() ;
-            dto.setChatText(ta.getGenContent());
-            dto.setName("高级数据库工程师");
-            dto.setRoleType("agent");
-            dto.setBusinessId(IdUtil.getSnowflakeNextIdStr());
-            dto.setIcon("http://data.linesno.com/icons/sepcialist/dataset_23.png");
-            dto.setDateTime(DateUtil.formatDateTime(new Date()));
-            messageList.add(dto) ;
-
-            ChatMessageDto dto3 = new ChatMessageDto() ;
-
-            String md = "" +
-                    "### 罗小东的任务已经处理\n" +
-//                    "- 任务：\n" + ta.getGenContent() + "\n" +
-                    "- 任务: \n" + "请编写关于Ansible的考核题目." + "\n" +
-                    "- 业务标识: 1733539703232249856\n" +
-                    "- 持续时间: 46秒503\n" +
-                    "- 环境: [测试环境](#)\n" +
-                    "- 内容: [查看生成结果](http://localhost/smart/specialist/index?businessId=1733539703232249856)\n" +
-                    "- 状态: 完成\n" +
-                    "- 完成时间: 2023-12-10 01:31:34\n" +
-                    "- 执行人：培训题设计Agent" +
-                    "" ;
-
-            dto3.setChatText(md);
-            dto3.setName("高级数据库工程师");
-            dto3.setRoleType("agent");
-            dto3.setBusinessId(IdUtil.getSnowflakeNextIdStr());
-            dto3.setIcon("http://data.linesno.com/icons/sepcialist/dataset_23.png");
-            dto3.setDateTime(DateUtil.formatDateTime(new Date()));
-            messageList.add(dto3) ;
-
-            ChatMessageDto personDto1 = new ChatMessageDto() ;
-            personDto1.setChatText("生成一个开发管理服务");
-            personDto1.setName("考核题目生成Agent");
-            personDto1.setBusinessId(IdUtil.getSnowflakeNextIdStr());
-            personDto1.setIcon("https://foruda.gitee.com/avatar/1676897721015308137/41655_landonniao_1656075872.png");
-            personDto1.setRoleType("person");
-            personDto1.setDateTime(DateUtil.formatDateTime(new Date()));
-            messageList.add(personDto1) ;
-
-            ChatMessageDto personDto = new ChatMessageDto() ;
-            personDto.setChatText("收到，罗小东的任务我已经在处理，请稍等1-2分钟 :-)");
-            personDto.setName("考核题目生成Agent");
-            personDto.setBusinessId(IdUtil.getSnowflakeNextIdStr());
-            personDto.setIcon("http://data.linesno.com/icons/sepcialist/dataset_23.png");
-            personDto.setRoleType("agent");
-            personDto.setDateTime(DateUtil.formatDateTime(new Date()));
-            messageList.add(personDto) ;
-
-            return AjaxResult.success(messageList) ;
-        }
-
-        return AjaxResult.error() ;
+        return AjaxResult.success(chatMessageDtos) ;
     }
 
     /**

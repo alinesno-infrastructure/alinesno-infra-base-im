@@ -115,6 +115,7 @@ import ChatUploadFile from './chatUploadFile'
 import {
   chatAssistantContent , 
   updateAssistantContent , 
+  chatMessage,
   sendUserMessage
 } from '@/api/base/im/robot'
 
@@ -176,7 +177,6 @@ const channelInfo = ref({
 })
 const showDropdown = ref(false);
 const selectedUsers = ref([]);
-const messageList = ref([]);
 
 const handleInput = () => {
   const lastWord = message.value.split(' ').pop();
@@ -216,7 +216,10 @@ const sendMessage = () => {
 /** 同步消息到后端 */
 function handleSendUserMessage(formattedMessage){
   console.log('formattedMessage = ' + formattedMessage) ;
-  sendUserMessage(formattedMessage).then(response => {
+
+  const channelId = Cookies.get('currentChannelId') ;
+
+  sendUserMessage(formattedMessage , channelId).then(response => {
     chatListRef.value.pushResponseMessageList(response.data);
   })
 }
@@ -278,6 +281,23 @@ function handleKeyDown(event) {
   }
 }
 
+/** 获取到会话信息 */
+function handleChatMessage() {
+
+  const channelId = Cookies.get('currentChannelId') ;
+
+  chatMessage(channelId).then(response => {
+    // messageList.value = response.data;
+    // loading.value = false;
+    // initChatBoxScroll();
+    let data = response.data ;
+    for(let i = 0 ; i < data.length ; i ++){
+      chatListRef.value.pushResponseMessageList(data[i]); 
+    }
+  })
+
+}
+
 /** 编辑生成内容 */
 function handleEditorContent(bId){
   editDialogVisible.value = true ; 
@@ -320,6 +340,7 @@ console.log('businessId = ' + businessId) ;
 
 handlelistAllUser() ;
 handleGetChannel();
+handleChatMessage() ;
 
 </script>
 

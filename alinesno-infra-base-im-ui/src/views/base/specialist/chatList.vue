@@ -28,6 +28,7 @@
             <div class="chat-ai-say-tools" style="margin-top: 3px;width: 100%;text-align: right;" :class="item.showTools?'show-tools':'hide-tools'">
                 <el-button type="danger" link icon="Promotion" size="small" @click="handleBusinessIdToMessageBox(item)">执行</el-button>
                 <el-button type="primary" link icon="EditPen" size="small" @click="handleEditGenContent(item)">编辑</el-button>
+                <el-button type="primary" link icon="Refresh" size="small" @click="handleRecyleGenContent(item)">重新生成</el-button>
             </div>
 
         </div>
@@ -40,10 +41,6 @@
 
 <script setup>
 
-import {
-  chatMessage
-} from '@/api/base/im/robot'
-
 import { getParam } from '@/utils/ruoyi'
 
 import { computed, ref , onMounted,  defineEmits} from 'vue';
@@ -51,12 +48,12 @@ import MarkdownIt from 'markdown-it';
 import mdKatex from '@traptitech/markdown-it-katex';
 import hljs from 'highlight.js';
 
-const messageList = ref([])
 const loading = ref(false)
 
 // 滚动条的处理_starter
 const innerRef = ref(null);
 const scrollbarRef = ref(null);
+const messageList = ref([]);
 
 // 定义派发事件
 const emit = defineEmits(['sendMessageToChatBox' , 'handleEditorContent'])
@@ -125,20 +122,6 @@ function readerHtml(chatText) {
   return mdi.render(chatText);
 }
 
-/** 获取到会话信息 */
-function handleChatMessage() {
-
-  const businessId = getParam('businessId') == null ? '1733452663532019712' : getParam('businessId');
-  console.log('businessId = ' + businessId);
-
-  chatMessage(businessId).then(response => {
-    messageList.value = response.data;
-    loading.value = false;
-    initChatBoxScroll();
-  })
-
-}
-
 /** 发送业务代码到消息框中 */
 function handleBusinessIdToMessageBox(item){
   const businessIdMessage = '#' + item.businessId + ' ' ;
@@ -161,9 +144,9 @@ function hideTools(item) {
   item.showTools = false; // 鼠标移出时隐藏 tools
 }
 
-onMounted(() => {
-  handleChatMessage();
-})
+// onMounted(() => {
+//   handleChatMessage();
+// })
 
 // 将这个方法暴露出去,这样父组件就可以使用了哈
 defineExpose({
