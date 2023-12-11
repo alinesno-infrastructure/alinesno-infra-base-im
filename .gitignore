@@ -4,6 +4,7 @@ _book
 .classpath
 .springBeans
 target
+yarn.lock
 bin
 classpath-data.json
 sts-cache
