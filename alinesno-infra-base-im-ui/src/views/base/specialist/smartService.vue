@@ -6,11 +6,12 @@
         <el-col :span="18">
           <div class="robot-chat-windows">
             <div class="robot-chat-header">
-              <div class="chat-header-title">
-                数据库高级工程师 Agent
+              <div class="chat-header-title" style="padding-left: 28px;">
+                <img style="width: 25px;height: 25px;border-radius: 5px;position: absolute;left: 10px;" :src="channelInfo.icon" />
+                {{ channelInfo.channelName }} 
               </div>
               <div class="chat-header-desc">
-                请确认生成的内容是否正确，请确认是否进入下一步 
+                ({{ channelInfo.channelDesc }}) 请确认生成的内容是否正确，请确认是否进入下一步 
               </div>
             </div>
 
@@ -78,18 +79,7 @@
       </el-row>
     </div>
 
-    <el-dialog v-model="dialogVisible" title="选择专家服务Agent" width="60%" :before-close="handleClose" append-to-body>
-
-      <!-- 打开角色管理 -->
-      <RoleAgent :businessId="businessId" />
-
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogVisible = false">关闭</el-button>
-        </span>
-      </template>
-    </el-dialog>
-
+    
     <el-dialog v-model="editDialogVisible" title="编辑生成内容" width="60%" :before-close="handleClose" append-to-body>
 
       <!-- 编辑生成的内容 -->
@@ -118,6 +108,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import Cookies from 'js-cookie'
 import ChatList from './chatList'
 import ChatUploadFile from './chatUploadFile'
 
@@ -128,13 +119,16 @@ import {
 } from '@/api/base/im/robot'
 
 import {
+  getChannel
+} from "@/api/base/im/channel";
+
+import {
   listAllUser,
 } from "@/api/base/im/user";
 
 import { getParam } from '@/utils/ruoyi'
 
 import SmartServiceAgent from './smartServiceAgent';
-import RoleAgent from './agent/roleAgent'
 
 const chatListRef = ref();
 const router = useRouter();
@@ -142,7 +136,6 @@ const {proxy} = getCurrentInstance();
 
 const businessId  = ref("1733452663532019712") ;
 const editorLoading = ref(true) ;
-const dialogVisible = ref(false)
 const editDialogVisible = ref(false)
 const currentTaskContent = ref("")
 const uploadChildComp = ref(null) 
@@ -176,6 +169,11 @@ const handleClose = () => {
 const message = ref('');
 let users = [] ;
 
+const channelInfo = ref({
+  icon: 'http://data.linesno.com/icons/sepcialist/dataset_8.png' ,
+  channelName: '公共频道' , 
+  channelDesc : '公共频道' , 
+})
 const showDropdown = ref(false);
 const selectedUsers = ref([]);
 const messageList = ref([]);
@@ -290,6 +288,14 @@ function handleEditorContent(bId){
   })
 }
 
+/** 查询当前频道 */
+function handleGetChannel(){
+    const channelId = Cookies.get('currentChannelId') ;
+    getChannel(channelId).then(response => {
+      channelInfo.value = response.data ;
+    })
+}
+
 /** 提交流程按钮 */
 function submitAssistantContentForm() {
   proxy.$refs["ChainRef"].validate(valid => {
@@ -313,6 +319,7 @@ businessId.value = getParam('businessId') == null ? '1733452663532019712' : getP
 console.log('businessId = ' + businessId) ;
 
 handlelistAllUser() ;
+handleGetChannel();
 
 </script>
 

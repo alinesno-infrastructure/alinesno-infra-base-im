@@ -2,7 +2,7 @@
 
   <el-dialog v-model="centerDialogVisible" title="创建频道" width="30%" align-center>
 
-    <div class="channel-box-panel">
+    <div class="channel-box-panel" :class="showCreateBox?'show-box':'hidden-box'">
 
       <ul style="margin: 0;padding: 0px;list-style: none;">
         <li>
@@ -11,7 +11,7 @@
             <div class="channel-text">
               创建自己的频道
             </div>
-            <el-button type="danger" style="position: absolute;right: 10px;" text bg>
+            <el-button type="danger" style="position: absolute;right: 10px;" text bg @click="showCreateBox = false">
               <i class="fa-solid fa-feather icon-btn"></i> 创建 
             </el-button>
           </div>
@@ -42,10 +42,43 @@
       </el-scrollbar>
     </div>
 
+    <div :class="showCreateBox?'hidden-box':'show-box'" style="height:481px">
+        <el-page-header @back="goBack" title="返回" style="margin-bottom: 30px;">
+          <template #content>
+            <span class="text-large font-600 mr-3"> 填写频道信息</span>
+          </template>
+        </el-page-header>
+        <el-form :model="form" :rules="rules" label-position="top" ref="userRef" label-width="80px">
+          <el-row>
+              <el-col :span="24">
+                <el-form-item label="频道图标" prop="icon">
+                  <el-avatar :size="size" src="http://data.linesno.com/icons/sepcialist/dataset_55.png" />
+                </el-form-item>
+              </el-col>
+          </el-row>
+          <el-row>
+              <el-col :span="24">
+                <el-form-item label="频道名称" prop="channelName">
+                    <el-input size="large" v-model="form.channelName" placeholder="请输入频道名称" maxlength="30" />
+                </el-form-item>
+              </el-col>
+          </el-row>
+          <el-row>
+              <el-col :span="24">
+                <el-form-item label="备注" prop="channelDesc">
+                    <el-input size="large" v-model="form.channelDesc" placeholder="请输入备注"></el-input>
+                </el-form-item>
+              </el-col>
+          </el-row>
+        </el-form> 
+        <div class="dialog-footer">
+            <el-button type="primary" size="large" bg text @click="submitChannelForm" style="float:right;margin-top:20px" icon="Link">创建频道</el-button>
+        </div>
+    </div>
+
     <template #footer>
       <span class="dialog-footer">
-        <!-- <el-button @click="centerDialogVisible = false">公共频道</el-button> -->
-        <el-button type="primary">加入频道</el-button>
+        <!-- <el-button type="primary">加入频道</el-button> -->
       </span>
     </template>
 
@@ -58,10 +91,27 @@
 let { proxy } = getCurrentInstance();
 import Cookies from 'js-cookie'
 
-import { onMounted } from 'vue';
-import { getParam } from '@/utils/ruoyi'
+import {
+  createChannel
+} from '@/api/base/im/channel'
 
+import { reactive, ref , onMounted } from 'vue'
+import { getParam } from '@/utils/ruoyi'
+import { ElLoading } from 'element-plus'
+
+const showCreateBox = ref(true) ; 
 const centerDialogVisible = ref(false)
+
+const data = reactive({
+  form: {},
+  rules: {
+    channelName: [{ required: true, message: "频道名称不能为空", trigger: "blur" }],
+    channelDesc: [{ required: true, message: "频道描述不能为空", trigger: "blur" }],
+  }
+});
+
+const { form, rules } = toRefs(data);
+
 const chatChannelTemplate = ref([
   { id: '1', name: '公共频道', desc: '这是公共讨论服务频道', icon: '' },
   { id: '2', name: '数据库设计频道', desc: '关于数据库设计的讨论', icon: '' },
@@ -74,12 +124,35 @@ const chatChannelTemplate = ref([
   { id: '9', name: '压力测试频道', desc: '关于系统压力测试的话题', icon: '' },
 ]);
 
+const goBack = () => {
+  console.log('go back')
+  showCreateBox.value = true ;
+}
+
 /** 设置ChannelId */
 function handleSetChannelId(channelId){
   console.log('handleSetChannelId channelId = ' + channelId) ;
   Cookies.set('currentChannelId', channelId) ;
 
   window.location.reload();
+}
+
+/** 创建频道 */
+function submitChannelForm(){
+  proxy.$refs["userRef"].validate(valid => {
+    if (valid) {
+      const loading = ElLoading.service({
+        lock: true,
+        text: 'Loading',
+      })
+      createChannel(form.value).then(response => {
+        proxy.$modal.msgSuccess("新增成功");
+        // loading.close();
+        // centerDialogVisible.value = false ;
+        handleSetChannelId(response.data)
+      });
+    }
+  });
 }
 
 /** 初始化 */
@@ -139,6 +212,14 @@ defineExpose({
     margin-right: 10px;
   }
 
+}
+
+.hidden-box {
+  display: none;
+}
+
+.show-box {
+  display: block;
 }
 
 </style>

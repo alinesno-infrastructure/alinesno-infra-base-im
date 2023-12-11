@@ -46,7 +46,7 @@
 
     <!-- 控制列表 -->
     <el-container style="height: calc(100vh - 56px);">
-      <el-aside width="300px" style="background: #fff;padding:10px;border-right:1px solid #e6e6e6">
+      <el-aside width="330px" style="background: #fff;padding:10px;border-right:1px solid #e6e6e6">
         <ChatSessionPanel @onSendParams="handleGetParams" />
       </el-aside>
       <el-main style="padding:0px;">

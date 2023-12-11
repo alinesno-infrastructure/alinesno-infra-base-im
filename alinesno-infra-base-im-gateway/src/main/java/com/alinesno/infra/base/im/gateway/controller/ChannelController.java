@@ -1,5 +1,6 @@
 package com.alinesno.infra.base.im.gateway.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.alinesno.infra.base.im.entity.ChannelEntity;
 import com.alinesno.infra.base.im.service.IChannelService;
 import com.alinesno.infra.common.core.constants.SpringInstanceScope;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 处理与BusinessLogEntity相关的请求的Controller。
@@ -47,15 +50,27 @@ public class ChannelController extends BaseController<ChannelEntity, IChannelSer
     }
 
     /**
-     * add Channel
+     * createChannel
      * @return
      */
-    @GetMapping("/addChannel")
-    public AjaxResult addChannel(Long userId , String channelId){
+    @PostMapping("/createChannel")
+    public AjaxResult createChannel(@RequestBody ChannelEntity entity){
 
-        log.debug("userId = {} , channelId = {}" , userId , channelId);
+       log.debug("entity = {}" , JSONObject.toJSONString(entity));
 
-        return AjaxResult.success() ;
+        String channelId = service.createChannel(entity) ;
+
+        return AjaxResult.success("操作成功" , channelId) ;
+    }
+
+    /**
+     * 查询出我所有的渠道
+     * @return
+     */
+    @GetMapping("/allMyChannel")
+    public AjaxResult allMyChannel(){
+        List<ChannelEntity> channelEntities = service.findAll() ;
+        return AjaxResult.success(channelEntities) ;
     }
 
     @Override

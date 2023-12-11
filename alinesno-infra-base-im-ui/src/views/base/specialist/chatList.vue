@@ -15,16 +15,19 @@
         </div>
 
         <div class="chat-ai-say-body" :class="item.roleType == 'person' ? 'say-right-window' : ''" style="max-width:90%">
-          <div class="say-message-info"> {{ item.name }} {{ item.dateTime }}
-
+          <div class="say-message-info" v-if="item.roleType == 'person'"> 
+            <span style="margin-left:10px" :class="item.showTools?'show-tools':'hide-tools'"> {{ item.dateTime }}</span> {{ item.name }} 
+          </div>
+          <div class="say-message-info" v-else> 
+            {{ item.name }}  <span style="margin-left:10px" :class="item.showTools?'show-tools':'hide-tools'"> {{ item.dateTime }} </span>
           </div>
 
           <div class="say-message-body markdown-body" v-if="item.readerType === 'html'" v-html="item.chatText"></div>
           <div class="say-message-body markdown-body" v-else v-html="readerHtml(item.chatText)"></div>
 
             <div class="chat-ai-say-tools" style="margin-top: 3px;width: 100%;text-align: right;" :class="item.showTools?'show-tools':'hide-tools'">
-                <el-button type="danger" link icon="Promotion" @click="handleBusinessIdToMessageBox(item)">执行</el-button>
-                <el-button type="primary" link icon="EditPen" @click="handleEditGenContent(item)">编辑</el-button>
+                <el-button type="danger" link icon="Promotion" size="small" @click="handleBusinessIdToMessageBox(item)">执行</el-button>
+                <el-button type="primary" link icon="EditPen" size="small" @click="handleEditGenContent(item)">编辑</el-button>
             </div>
 
         </div>

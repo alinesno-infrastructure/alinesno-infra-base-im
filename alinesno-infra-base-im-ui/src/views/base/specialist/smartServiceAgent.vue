@@ -14,18 +14,33 @@
               </div>
             </li>
             <li class="item-process" style="background-color: #fff;text-align: center;">
-              <el-button type="primary" text bg icon="ChatRound">添加Agent到频道</el-button>
+              <el-button type="primary" text bg icon="ChatRound" @click="dialogVisible = true">添加Agent到频道</el-button>
             </li>
           </ul>
         </div>
       </div>
     </div>
 
+    <el-dialog v-model="dialogVisible" title="选择专家服务Agent" width="60%" :before-close="handleClose" append-to-body>
+
+      <!-- 打开角色管理 -->
+      <RoleAgent :businessId="businessId" />
+
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogVisible = false">关闭</el-button>
+        </span>
+      </template>
+    </el-dialog>
+
   </div>
 </template>
 
 <script setup>
 
+import RoleAgent from './agent/roleAgent'
+
+const dialogVisible = ref(false)
 const favouriteList = ref([
   { id: '1', icon: 'fa-solid fa-truck-fast', name: '技术指导Agent' },
   { id: '2', icon: 'fa-solid fa-pen-nib', name: '技术学习材料Agent' },

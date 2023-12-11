@@ -30,7 +30,6 @@
 
     <template #footer>
       <span class="dialog-footer">
-        <!-- <el-button @click="centerDialogVisible = false">公共频道</el-button> -->
         <el-button type="primary">加入频道</el-button>
       </span>
     </template>

@@ -19,7 +19,7 @@ public class ChannelEntity extends InfraBaseEntity {
     @Column(type = MySqlTypeConstant.VARCHAR, length = 255, isNull = false, comment = "频道Icon")
 	private String icon ;
 
-    @Column(type = MySqlTypeConstant.VARCHAR, length = 11, isNull = false, comment = "频道ID")
+    @Column(type = MySqlTypeConstant.VARCHAR, length = 64, isNull = false, comment = "频道ID")
     private String channelId;
 
     @Column(type = MySqlTypeConstant.VARCHAR, length = 50, isNull = false, comment = "频道名")
