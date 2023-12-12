@@ -8,21 +8,29 @@
     </div>
 
     <el-scrollbar style="float:left;height:calc(100vh - 200px)">
-      <div class="chatChannel-session" :class="item.id == currentChatChannel ? 'select-chatChannel' : ''"
-        @click="handleSelectChatChannel(item)" v-for="item in chatChannel" :key="item">
+      <div class="chatChannel-session" 
+          @mouseover="showTools(item)"
+          @mouseleave="hideTools(item)"
+          :class="item.id == currentChatChannel ? 'select-chatChannel' : ''" v-for="item in chatChannel" :key="item">
         <el-row>
-          <el-col :span="5">
+          <el-col :span="5" @click="handleSelectChatChannel(item)" >
             <div class="chatChannel-icon">
               <img :src="item.icon" style="width:40px;height:40px;border-radius: 5px;" />
             </div>
           </el-col>
           <el-col :span="19">
-            <div class="chatChannel-title">
+            <div class="chatChannel-title" @click="handleSelectChatChannel(item)" >
               #{{ item.channelName }}
             </div>
             <div class="chatChannel-desc">
               {{ item.channelDesc }}
             </div>
+            <el-button type="danger" 
+                :class="item.showTools && item.channelType !== '1' ?'show-tools':'hide-tools'"  
+                link
+                style="position: absolute;top: 10px;right: 10px;" 
+                icon="Close" 
+                @click="handelDeleteChannel(item)">删除</el-button>
           </el-col>
         </el-row>
       </div>
@@ -44,7 +52,9 @@ import {
 } from '@/api/base/im/robot'
 
 import {
-  allMyChannel
+  allMyChannel , 
+  delChannel , 
+  removeChannel
 } from '@/api/base/im/channel'
 
 import Cookies from 'js-cookie'
@@ -52,19 +62,12 @@ import { getParam } from '@/utils/ruoyi'
 import ChannelGroup from "./channelGroup";
 import ChannelGroupDiscover from "./channelGroupDiscover";
 
+const router = useRouter();
 const createChildComp = ref(null);
 const addChildComp = ref(null);
 
 const chatChannel = ref([
   { id: '1', channelName: '公共频道', channelDesc: '这是公共讨论服务频道', icon: '' },
-  { id: '2', channelName: '数据库设计频道', channelDesc: '关于数据库设计的讨论', icon: '' },
-  { id: '3', channelName: '代码模块生成频道', channelDesc: '讨论代码模块生成相关话题', icon: '' },
-  { id: '4', channelName: '数据分析频道', channelDesc: '数据分析技术和方法的讨论', icon: '' },
-  { id: '5', channelName: '考核题目设计频道', channelDesc: '考核题目设计相关讨论', icon: '' },
-  { id: '6', channelName: '文档生成频道', channelDesc: '讨论文档生成工具和最佳实践', icon: '' },
-  { id: '7', channelName: '技术架构设计频道', channelDesc: '关于技术架构设计的讨论', icon: '' },
-  { id: '8', channelName: '解决方案讨论频道', channelDesc: '讨论解决问题的不同方案', icon: '' },
-  { id: '9', channelName: '压力测试频道', channelDesc: '关于系统压力测试的话题', icon: '' },
 ]);
 const currentChatChannel = ref('0');
 
@@ -80,14 +83,15 @@ const emit = defineEmits(['onSendParams'])
 
 /** 选择当前频道 */
 function handleSelectChatChannel(item) {
-  Cookies.set('currentChannelId', item.id);
 
-  window.location.reload();
+  const channelId = item.id ;
+  router.push({
+      path: '/index',
+      query: { 'channel': channelId }
+  })
+
+  // window.location.reload();
 }
-
-
-// 检查更新后的 chatChannel
-// console.log(chatChannel.value);
 
 /** 创建频道 */
 function createChannel() {
@@ -101,16 +105,47 @@ function addChannel() {
   addChildComp.value.handleOpenChannel(true);
 }
 
+/** 删除路径 */
+function handelDeleteChannel(item){
+  removeChannel(item.id).then(response => {
+    handleAllMyChannel();
+  })
+}
+
 /** 查询所所有我在参与的频道 */
 function handleAllMyChannel() {
 
-  currentChatChannel.value = Cookies.get('currentChannelId');
+  const channelId = getParam("channel");
+  currentChatChannel.value = channelId ; 
+
   allMyChannel().then(response => {
     chatChannel.value = response.data;
   })
 }
 
+function showTools(item) {
+    this.chatChannel.forEach((i) => {
+      i.showTools = i === item; // 只有当前项的 showTools 被设置为 true
+    });
+}
+
+function hideTools(item) {
+  item.showTools = false; // 鼠标移出时隐藏 tools
+}
+
 handleAllMyChannel();
+
+/** 监听路由变化 */
+watch(() =>  router.currentRoute.value.path,
+    (toPath) => {
+    //要执行的方法
+    // const channelId = router.currentRoute.value.channelId;
+
+    handleAllMyChannel();
+      
+    },{immediate: true,deep: true}
+)
+  
 
 </script>
 
@@ -167,5 +202,13 @@ handleAllMyChannel();
       text-align: center;
     }
   }
+
+.show-tools{
+  visibility: visible;
+}
+
+.hide-tools{
+  visibility: hidden;
+}
 }
 </style>

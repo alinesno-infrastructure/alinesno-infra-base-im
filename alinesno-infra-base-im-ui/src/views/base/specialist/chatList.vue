@@ -60,8 +60,6 @@ const emit = defineEmits(['sendMessageToChatBox' , 'handleEditorContent'])
 
 // 改变组件的中的方法
 const pushMessageList = (mess) => {
-  console.log('mess = ' + mess);
-  console.log('mess = ' + JSON.stringify(mess));
 
   let chatText = '';
   for (let i = 0; i < mess.length; i++) {
@@ -75,11 +73,23 @@ const pushMessageList = (mess) => {
     }
   }
 
-  console.log('chatText = ' + chatText);
-  messageList.value.push({ roleType: 'person', businessId: '1733452663532019712' ,  dateTime: '2023-12-11 16:32:10' ,  readerType:'html', icon:'https://foruda.gitee.com/avatar/1676897721015308137/41655_landonniao_1656075872.png', name: '软件工程师罗小东', date: '12-10 13:58:21', chatText: chatText });
+  messageList.value.push({ 
+    roleType: 'person', 
+    businessId: '1733452663532019712' ,  
+    dateTime: '2023-12-11 16:32:10' ,  
+    readerType:'html', icon:'https://foruda.gitee.com/avatar/1676897721015308137/41655_landonniao_1656075872.png', 
+    name: '软件工程师罗小东', 
+    date: '12-10 13:58:21', 
+    chatText: chatText });
 
   initChatBoxScroll();
 };
+
+// 推送消息到当前面板
+const currentResponseMessageList = (message) => {
+  messageList.value = message ; 
+  initChatBoxScroll();
+}
 
 // 推送消息到当前面板
 const pushResponseMessageList = (message) => {
@@ -151,6 +161,7 @@ function hideTools(item) {
 // 将这个方法暴露出去,这样父组件就可以使用了哈
 defineExpose({
   pushMessageList,
+  currentResponseMessageList,
   pushResponseMessageList
 });
 

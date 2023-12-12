@@ -101,6 +101,7 @@ import { ElLoading } from 'element-plus'
 
 const showCreateBox = ref(true) ; 
 const centerDialogVisible = ref(false)
+const router = useRouter();
 
 const data = reactive({
   form: {},
@@ -125,16 +126,25 @@ const chatChannelTemplate = ref([
 ]);
 
 const goBack = () => {
-  console.log('go back')
   showCreateBox.value = true ;
+}
+
+const reset = () => {
+  form.value = {
+    channelId: undefined,
+    channelName: undefined,
+    channelDesc: undefined,
+  };
+  proxy.resetForm("userRef");
 }
 
 /** 设置ChannelId */
 function handleSetChannelId(channelId){
-  console.log('handleSetChannelId channelId = ' + channelId) ;
-  Cookies.set('currentChannelId', channelId) ;
-
-  window.location.reload();
+  router.push({
+      path: '/index',
+      query: { 'channel': channelId }
+  })
+  // window.location.reload();
 }
 
 /** 创建频道 */
@@ -148,8 +158,12 @@ function submitChannelForm(){
       createChannel(form.value).then(response => {
         proxy.$modal.msgSuccess("新增成功");
         // loading.close();
-        // centerDialogVisible.value = false ;
-        handleSetChannelId(response.data)
+        centerDialogVisible.value = false ;
+        loading.close() ;
+
+        reset() ;
+
+        handleSetChannelId(response.data) ;
       });
     }
   });
@@ -158,8 +172,7 @@ function submitChannelForm(){
 /** 初始化 */
 onMounted(() => {
 
-  const channelId = Cookies.get('currentChannelId') ;
-  console.log('channelId = ' + channelId + '--' + (channelId == undefined)) ;
+  const channelId = getParam("channel");
 
   if(channelId == undefined) {
     centerDialogVisible.value = true;

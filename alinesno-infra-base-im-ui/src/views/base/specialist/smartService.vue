@@ -47,7 +47,7 @@
 
                 <el-col :span="6" style="text-align: right;">
 
-                    <el-tooltip class="box-item" effect="dark" content="确认发送指令给Agent" placement="top" >
+                    <el-tooltip class="box-item" effect="dark" content="确认发送指令给Agent，快捷键：Enter+Ctrl" placement="top" >
                       <el-button type="danger" text bg size="large" @click="sendMessage">
                         <i class="fa-solid fa-paper-plane icon-btn"></i>
                       </el-button>
@@ -116,7 +116,8 @@ import {
   chatAssistantContent , 
   updateAssistantContent , 
   chatMessage,
-  sendUserMessage
+  sendUserMessage,
+  getTaskNotice
 } from '@/api/base/im/robot'
 
 import {
@@ -135,7 +136,7 @@ const chatListRef = ref();
 const router = useRouter();
 const {proxy} = getCurrentInstance();
 
-const businessId  = ref("1733452663532019712") ;
+const businessId  = ref("") ;
 const editorLoading = ref(true) ;
 const editDialogVisible = ref(false)
 const currentTaskContent = ref("")
@@ -196,6 +197,12 @@ const mentionUser = (user) => {
 };
 
 const sendMessage = () => {
+
+  // 判断是否有内容
+  if(!message.value){
+    return ;
+  }
+
   const output = {
     message: message.value,
     mentionedUsers: selectedUsers.value.map((user) => user.roleName),
@@ -207,7 +214,6 @@ const sendMessage = () => {
 
   // 发送消息到后台
   handleSendUserMessage(formattedMessage) ;
-  console.log(output); // Replace with your desired handling of the output
 
   message.value = '';
   selectedUsers.value = [];
@@ -215,9 +221,7 @@ const sendMessage = () => {
 
 /** 同步消息到后端 */
 function handleSendUserMessage(formattedMessage){
-  console.log('formattedMessage = ' + formattedMessage) ;
-
-  const channelId = Cookies.get('currentChannelId') ;
+  const channelId = getParam("channel");
 
   sendUserMessage(formattedMessage , channelId).then(response => {
     chatListRef.value.pushResponseMessageList(response.data);
@@ -239,7 +243,6 @@ const removeMention = (userId) => {
 
 //子组件使用使用父组件函数
 const sendMessageToChatBox = (msg) => {
-  console.log(" Come from Sub = " + msg);
   message.value += msg ; 
 }
 
@@ -276,25 +279,25 @@ const formatMessage = (message, selectedUsers) => {
 function handleKeyDown(event) {
   if (event.key === "Enter" && event.ctrlKey) {
     // 在这里执行你想要的操作
-    console.log("Enter+Ctrl 被按下");
     sendMessage() ;
   }
 }
 
 /** 获取到会话信息 */
-function handleChatMessage() {
+function handleChatMessage(channelId) {
 
-  const channelId = Cookies.get('currentChannelId') ;
+  // const channelId = getParam("channel");
 
-  chatMessage(channelId).then(response => {
-    // messageList.value = response.data;
-    // loading.value = false;
-    // initChatBoxScroll();
-    let data = response.data ;
-    for(let i = 0 ; i < data.length ; i ++){
-      chatListRef.value.pushResponseMessageList(data[i]); 
-    }
-  })
+  if(channelId){
+    chatMessage(channelId).then(response => {
+      // messageList.value = response.data;
+      // loading.value = false;
+      // initChatBoxScroll();
+      const data = response.data ;
+      chatListRef.value.currentResponseMessageList(data); 
+
+    })
+  }
 
 }
 
@@ -309,11 +312,13 @@ function handleEditorContent(bId){
 }
 
 /** 查询当前频道 */
-function handleGetChannel(){
-    const channelId = Cookies.get('currentChannelId') ;
-    getChannel(channelId).then(response => {
-      channelInfo.value = response.data ;
-    })
+function handleGetChannel(channelId){
+    // const channelId = getParam("channel");
+    if(channelId){
+      getChannel(channelId).then(response => {
+        channelInfo.value = response.data ;
+      })
+    }
 }
 
 /** 提交流程按钮 */
@@ -334,13 +339,53 @@ function handlelistAllUser(){
     users = response.data ; 
   })
 }
-  
-businessId.value = getParam('businessId') == null ? '1733452663532019712' : getParam('businessId') ;
-console.log('businessId = ' + businessId) ;
 
+/** 获取到当前执行中的任务消息 */
+function handleGetTaskNotice(){
+
+  const channelId = getParam("channel");
+
+  getTaskNotice().then(response => {
+    const data = response.data ;
+    if(data && data.length > 0){
+      for(let i = 0 ; i < data.length ; i ++){
+        const messageChannelId = data[i].channelId ; 
+
+        if(parseInt(channelId) == messageChannelId){
+          chatListRef.value.pushResponseMessageList(data[i]);
+        }
+      }
+    }
+  })
+}
+
+/** 获取定时任务服务 */
+let timer = null;
+onMounted(() => {
+  timer = setInterval(() => {
+    handleGetTaskNotice() ;
+  }, 10*1000);
+})
+
+/** 任务实例销毁 */
+onBeforeUnmount(() => {
+  clearInterval(timer)
+  timer = null;
+})
+
+/** 监听路由变化 */
+watch(() =>  router.currentRoute.value.path,
+    (toPath) => {
+    //要执行的方法
+    const channelId = getParam("channel");
+
+    handleGetChannel(channelId);
+    handleChatMessage(channelId) ;
+      
+    },{immediate: true,deep: true}
+)
+  
 handlelistAllUser() ;
-handleGetChannel();
-handleChatMessage() ;
 
 </script>
 

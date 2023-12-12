@@ -10,6 +10,24 @@ var managerUrl = {
   updateAssistantContent: prefix +"updateAssistantContent" ,
   runChainAgent: prefix +"runChainAgent" ,
   sendUserMessage: prefix +"sendUserMessage" ,
+  getTaskNotice : prefix +"getTaskNotice " ,
+  getChannelAgent: prefix +"getChannelAgent" ,
+}
+
+// 获取任务实例完成通知
+export function getChannelAgent(channelId){
+  return request({
+    url: managerUrl.getChannelAgent + "?channelid=" + channelId, 
+    method: 'get'
+  })
+}
+
+// 获取任务实例完成通知
+export function getTaskNotice(){
+  return request({
+    url: managerUrl.getTaskNotice , 
+    method: 'get'
+  })
 }
 
 // 客户端发送消息 

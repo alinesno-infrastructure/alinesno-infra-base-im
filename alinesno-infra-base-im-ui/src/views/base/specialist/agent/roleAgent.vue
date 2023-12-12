@@ -181,7 +181,6 @@ function getList() {
 
 /** 搜索按钮操作 */
 function handleQuery() {
-  console.log(queryParams);
   queryParams.value.pageNum = 1;
   getList();
 };
@@ -214,7 +213,6 @@ function handleLangChain(row){
 function handleChainAgent(row){
   const roleId = row.id ; 
   const businessId = props.businessId ; 
-  console.log('roleId = ' + roleId + ' , businessId = ' + businessId) ;
 
   runChainAgent(roleId , businessId).then(response => {
     proxy.$modal.msgSuccess("运行成功，请注意查收钉钉消息.");

@@ -34,17 +34,17 @@ public class MessageServiceImpl extends IBaseServiceImpl<MessageEntity , Message
         }
         StringBuilder chatTextBuilder = new StringBuilder();
 
-                // 假设Content是一个自定义类，包含type、text、username和businessId属性
-                for (WebMessageDto content : parsedMessages) {
-                    if ("text".equals(content.getType())) {
-                        chatTextBuilder.append("<span class=\"mention-text\">").append(content.getText()).append("</span>");
-                    } else if ("mention".equals(content.getType())) {
-                        chatTextBuilder.append("<span class=\"mention\">@").append(content.getUsername()).append("</span>");
-                    } else if ("business".equals(content.getType())) {
-                        chatTextBuilder.append("<span class=\"mention-business\">#").append(content.getBusinessId()).append("</span>");
-                    }
-                }
-                String chatText = chatTextBuilder.toString();
+        // 假设Content是一个自定义类，包含type、text、username和businessId属性
+        for (WebMessageDto content : parsedMessages) {
+            if ("text".equals(content.getType())) {
+                chatTextBuilder.append("<span class=\"mention-text\">").append(content.getText()).append("</span>");
+            } else if ("mention".equals(content.getType())) {
+                chatTextBuilder.append("<span class=\"mention\">@").append(content.getUsername()).append("</span>");
+            } else if ("business".equals(content.getType())) {
+                chatTextBuilder.append("<span class=\"mention-business\">#").append(content.getBusinessId()).append("</span>");
+            }
+        }
+        String chatText = chatTextBuilder.toString();
 
         MessageEntity msg = new MessageEntity() ;
 
@@ -76,17 +76,13 @@ public class MessageServiceImpl extends IBaseServiceImpl<MessageEntity , Message
             for(MessageEntity e : entityList){
                 ChatMessageDto dto = new ChatMessageDto() ;
 
-
-
-
                 dto.setChatText(e.getContent());
-//                dto.setChatText(chatText);
 
                 dto.setName(e.getName());
                 dto.setRoleType(e.getRoleType());
                 dto.setReaderType(e.getReaderType());
                 dto.setBusinessId(e.getBusinessId());
-                dto.setIcon("http://data.linesno.com/icons/sepcialist/dataset_23.png");
+                dto.setIcon(e.getIcon());
                 dto.setDateTime(DateUtil.formatDateTime(e.getAddTime()));
                 dto.setBusinessId(IdUtil.getSnowflakeNextIdStr());
 
@@ -119,20 +115,7 @@ public class MessageServiceImpl extends IBaseServiceImpl<MessageEntity , Message
                 chatTextBuilder.append("<span class=\"mention-business\">#").append(content.getBusinessId()).append("</span>");
             }
         }
-        String chatText = chatTextBuilder.toString();
-
-        MessageEntity msg = new MessageEntity() ;
-
-        msg.setMessageId(IdUtil.getSnowflakeNextId());
-        msg.setChannelId(channelId);
-        msg.setSenderId(IdUtil.getSnowflakeNextId());
-
-        msg.setReaderType("html");
-        msg.setRoleType("person");
-        msg.setAddTime(new Date());
-        msg.setName("软件工程师罗小东");
-        msg.setReceiverId(receiverId.toString());
-        msg.setContent(chatText)  ; // JSONObject.toJSONString(parsedMessages));
+        MessageEntity msg = getMessageEntity(channelId, chatTextBuilder, receiverId);
 
         save(msg) ;
 
@@ -154,5 +137,24 @@ public class MessageServiceImpl extends IBaseServiceImpl<MessageEntity , Message
         entity.setReceiverId(IdUtil.getSnowflakeNextIdStr());
 
         save(entity) ;
+    }
+
+    private static MessageEntity getMessageEntity(Long channelId, StringBuilder chatTextBuilder, StringBuilder receiverId) {
+        String chatText = chatTextBuilder.toString();
+
+        MessageEntity msg = new MessageEntity() ;
+
+        msg.setMessageId(IdUtil.getSnowflakeNextId());
+        msg.setChannelId(channelId);
+        msg.setSenderId(IdUtil.getSnowflakeNextId());
+
+        msg.setIcon("https://foruda.gitee.com/avatar/1676897721015308137/41655_landonniao_1656075872.png");
+        msg.setReaderType("html");
+        msg.setRoleType("person");
+        msg.setAddTime(new Date());
+        msg.setName("软件工程师罗小东");
+        msg.setReceiverId(receiverId.toString());
+        msg.setContent(chatText)  ; // JSONObject.toJSONString(parsedMessages));
+        return msg;
     }
 }

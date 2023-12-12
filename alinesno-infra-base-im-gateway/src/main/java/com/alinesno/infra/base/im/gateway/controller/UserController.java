@@ -57,7 +57,6 @@ public class UserController extends BaseController<UserEntity, IUserService> {
      */
     @GetMapping("/listAllUser")
     public AjaxResult listAllUser(){
-//        List<UserEntity> roleEntityList = new ArrayList<>() ; //  service.list() ;
 
         List<UserEntity> roleEntityList = new ArrayList<>();
 

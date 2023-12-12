@@ -64,12 +64,25 @@ public class ChannelController extends BaseController<ChannelEntity, IChannelSer
     }
 
     /**
+     * 逻辑删除聊天窗口
+     * @return
+     */
+    @DeleteMapping("/removeChannel")
+    public AjaxResult removeChannel(Long channelId){
+
+        service.removeChannel(channelId) ;
+
+        return AjaxResult.success() ;
+    }
+
+    /**
      * 查询出我所有的渠道
      * @return
      */
     @GetMapping("/allMyChannel")
     public AjaxResult allMyChannel(){
-        List<ChannelEntity> channelEntities = service.findAll() ;
+
+        List<ChannelEntity> channelEntities = service.allMyChannel() ;
         return AjaxResult.success(channelEntities) ;
     }
 

@@ -15,10 +15,10 @@ public class BaseImApplication {
 
 	public static void main(String[] args) throws Exception {
 
-		JimServer jimServer = AppConfiguration.getJimServer();
+//		JimServer jimServer = AppConfiguration.getJimServer();
 		SpringApplication.run(BaseImApplication.class, args);
+//		jimServer.start();
 
-		jimServer.start();
 	}
 
 

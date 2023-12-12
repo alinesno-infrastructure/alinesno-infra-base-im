@@ -7,9 +7,9 @@
         <div class="process-panel">
           <ul>
             <li class="item-process" v-for="(item, index) in favouriteList" :key="index">
-              <img style="width:30px;height:30px;border-radius: 50%;position: absolute;" :src="'http://data.linesno.com/icons/sepcialist/dataset_' + (index + 5) + '.png'" />
+              <img style="width:30px;height:30px;border-radius: 50%;position: absolute;" :src="'http://data.linesno.com/icons/sepcialist/dataset_' + (index + 9) + '.png'" />
               <div style="margin-left: 40px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;margin-top: -2px;color: #2c3e50;">
-                {{ item.name }}
+                {{ item.roleName }}
                 <el-button type="primary" style="float:right" icon="Link" text bg>提问</el-button>
               </div>
             </li>
@@ -40,27 +40,35 @@
 
 import RoleAgent from './agent/roleAgent'
 
+import {
+  getChannelAgent
+} from '@/api/base/im/robot'
+
+const router = useRouter();
 const dialogVisible = ref(false)
 const favouriteList = ref([
-  { id: '1', icon: 'fa-solid fa-truck-fast', name: '技术指导Agent' },
-  { id: '2', icon: 'fa-solid fa-pen-nib', name: '技术学习材料Agent' },
-  { id: '3', icon: 'fa-solid fa-pen-ruler', name: '解决方案编写Agent' },
-  { id: '4', icon: 'fa-solid fa-paint-roller', name: '技术架构分析Agent' },
-  { id: '7', icon: 'fa-solid fa-file-word', name: '代码工程结构Agent' },
-  { id: '4', icon: 'fa-solid fa-compass-drafting', name: '需求转代码Agent' },
-  { id: '6', icon: 'fa-solid fa-user-nurse', name: '数据库设计Agent' },
+  { id: '1', icon: 'fa-solid fa-truck-fast', roleName: '技术指导Agent' },
 ])
 
-const helpAutoList = ref([
-  { id: '1', icon: 'fa-solid fa-truck-fast', name: '技术指导Agent' },
-  { id: '2', icon: 'fa-solid fa-pen-nib', name: '技术学习材料Agent' },
-  { id: '8', icon: 'fa-brands fa-dashcube', name: '考核题目生成Agent' },
-  { id: '3', icon: 'fa-solid fa-pen-ruler', name: '解决方案编写Agent' },
-  { id: '4', icon: 'fa-solid fa-paint-roller', name: '技术架构分析Agent' },
-  { id: '7', icon: 'fa-solid fa-file-word', name: '代码工程结构Agent' },
-  { id: '4', icon: 'fa-solid fa-compass-drafting', name: '需求转代码Agent' },
-  { id: '5', icon: 'fa-solid fa-feather', name: '技术架构Agent' },
-  { id: '6', icon: 'fa-solid fa-user-nurse', name: '数据库设计Agent' },
-])
+/** 获取到基础信息 */
+function handleGetChannelAgent(){
+  getChannelAgent(null).then(response => {
+    favouriteList.value = response.data ;
+  })
+}
+
+handleGetChannelAgent() ;
+
+/** 监听路由变化 */
+watch(() =>  router.currentRoute.value.path,
+    (toPath) => {
+    //要执行的方法
+    // const channelId = router.currentRoute.value.channelId;
+
+    handleGetChannelAgent() ;
+      
+    },{immediate: true,deep: true}
+)
+  
 
 </script>

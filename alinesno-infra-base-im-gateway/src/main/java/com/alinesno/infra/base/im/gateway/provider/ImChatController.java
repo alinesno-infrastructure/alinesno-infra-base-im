@@ -5,12 +5,10 @@ import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.alinesno.infra.base.im.adapter.SmartAssistantConsumer;
 import com.alinesno.infra.base.im.adapter.SmartBrainConsumer;
-import com.alinesno.infra.base.im.dto.ChatMessageDto;
-import com.alinesno.infra.base.im.dto.RobotMessageDto;
-import com.alinesno.infra.base.im.dto.TaskContentDto;
-import com.alinesno.infra.base.im.dto.WebMessageDto;
-import com.alinesno.infra.base.im.entity.MessageEntity;
+import com.alinesno.infra.base.im.dto.*;
+import com.alinesno.infra.base.im.service.IChannelUserService;
 import com.alinesno.infra.base.im.service.IMessageService;
+import com.alinesno.infra.base.im.service.ITaskService;
 import com.alinesno.infra.common.facade.response.AjaxResult;
 import com.alinesno.infra.common.web.adapter.rest.SuperController;
 import lombok.SneakyThrows;
@@ -36,7 +34,13 @@ public class ImChatController extends SuperController {
     private IMessageService messageService ;
 
     @Autowired
+    private IChannelUserService channelUserService ;
+
+    @Autowired
     private SmartBrainConsumer smartBrainConsumer ;
+
+    @Autowired
+    private ITaskService taskService ;
 
     /**
      * 获取到消息信息
@@ -60,9 +64,8 @@ public class ImChatController extends SuperController {
 
         log.debug("dtoList = {}" , JSONObject.toJSONString(dtoList));
 
-//        messageService.saveUserMessage(dtoList , channelId) ;
-
         // 提交任务给处理服务，让它后台执行处理
+        taskService.addTask(channelId , IdUtil.getSnowflakeNextIdStr());
 
         // 完成之后发送消息给前端
         ChatMessageDto personDto = new ChatMessageDto() ;
@@ -119,6 +122,17 @@ public class ImChatController extends SuperController {
     }
 
     /**
+     * 轮训任务结果，这里假设并发不高的情况下执行
+     * TODO 后续再进一步优化
+     * @return
+     */
+    @GetMapping("/getTaskNotice")
+    public AjaxResult getTaskNotice(){
+        return AjaxResult.success("查询成功" , taskService.getTaskMessage()) ;
+    }
+
+
+    /**
      * 获取到消息信息
      * @return
      */
@@ -127,71 +141,37 @@ public class ImChatController extends SuperController {
 
         List<ChatMessageDto> chatMessageDtos = messageService.listByChannelId(channelId) ;
 
-//        AjaxResult result = smartBrainConsumer.chatContent(channelId) ;
-//
-//        log.debug("chatContent result = {}" , result);
-//
-//        String resultData = result.get("data").toString() ;
-//        TaskContentDto ta = null ;
-//        if(resultData != null){
-//            ta =  JSONObject.parseObject(resultData, TaskContentDto.class) ;
-//            List<ChatMessageDto> messageList = new ArrayList<>() ;
-//
-//
-//            ChatMessageDto dto = new ChatMessageDto() ;
-//            dto.setChatText(ta.getGenContent());
-//            dto.setName("高级数据库工程师");
-//            dto.setRoleType("agent");
-//            dto.setBusinessId(IdUtil.getSnowflakeNextIdStr());
-//            dto.setIcon("http://data.linesno.com/icons/sepcialist/dataset_23.png");
-//            dto.setDateTime(DateUtil.formatDateTime(new Date()));
-//            messageList.add(dto) ;
-//
-//            ChatMessageDto dto3 = new ChatMessageDto() ;
-//
-//            String md = "" +
-//                    "### 罗小东的任务已经处理\n" +
-////                    "- 任务：\n" + ta.getGenContent() + "\n" +
-//                    "- 任务: \n" + "请编写关于Ansible的考核题目." + "\n" +
-//                    "- 业务标识: 1733539703232249856\n" +
-//                    "- 持续时间: 46秒503\n" +
-//                    "- 环境: [测试环境](#)\n" +
-//                    "- 内容: [查看生成结果](http://localhost/smart/specialist/index?businessId=1733539703232249856)\n" +
-//                    "- 状态: 完成\n" +
-//                    "- 完成时间: 2023-12-10 01:31:34\n" +
-//                    "- 执行人：培训题设计Agent" +
-//                    "" ;
-//
-//            dto3.setChatText(md);
-//            dto3.setName("高级数据库工程师");
-//            dto3.setRoleType("agent");
-//            dto3.setBusinessId(IdUtil.getSnowflakeNextIdStr());
-//            dto3.setIcon("http://data.linesno.com/icons/sepcialist/dataset_23.png");
-//            dto3.setDateTime(DateUtil.formatDateTime(new Date()));
-//            messageList.add(dto3) ;
-//
-//            ChatMessageDto personDto1 = new ChatMessageDto() ;
-//            personDto1.setChatText("生成一个开发管理服务");
-//            personDto1.setName("考核题目生成Agent");
-//            personDto1.setBusinessId(IdUtil.getSnowflakeNextIdStr());
-//            personDto1.setIcon("https://foruda.gitee.com/avatar/1676897721015308137/41655_landonniao_1656075872.png");
-//            personDto1.setRoleType("person");
-//            personDto1.setDateTime(DateUtil.formatDateTime(new Date()));
-//            messageList.add(personDto1) ;
-//
-//            ChatMessageDto personDto = new ChatMessageDto() ;
-//            personDto.setChatText("收到，罗小东的任务我已经在处理，请稍等1-2分钟 :-)");
-//            personDto.setName("考核题目生成Agent");
-//            personDto.setBusinessId(IdUtil.getSnowflakeNextIdStr());
-//            personDto.setIcon("http://data.linesno.com/icons/sepcialist/dataset_23.png");
-//            personDto.setRoleType("agent");
-//            personDto.setDateTime(DateUtil.formatDateTime(new Date()));
-//            messageList.add(personDto) ;
-//
-//            return AjaxResult.success(messageList) ;
-//        }
+        if(chatMessageDtos == null || chatMessageDtos.isEmpty()){
+            chatMessageDtos = new ArrayList<>()  ;
+
+            // 完成之后发送消息给前端
+            ChatMessageDto agentInfo = new ChatMessageDto() ;
+
+            agentInfo.setChatText("你好，你可以查看一下使用教程<a target='_blank' href='http://portal.infra.linesno.com'>教程</a>或者@你想咨询的Agent.");
+            agentInfo.setName("Agent小助理");
+            agentInfo.setRoleType("agent");
+            agentInfo.setReaderType("html");
+            agentInfo.setBusinessId(IdUtil.getSnowflakeNextIdStr());
+            agentInfo.setDateTime(DateUtil.formatDateTime(new Date()));
+            agentInfo.setIcon("http://data.linesno.com/icons/sepcialist/dataset_23.png");
+            agentInfo.setDateTime(DateUtil.formatDateTime(new Date()));
+
+            chatMessageDtos.add(agentInfo) ;
+        }
 
         return AjaxResult.success(chatMessageDtos) ;
+    }
+
+    /**
+     * 获取到频道的Agent列表
+     * @return
+     */
+    @GetMapping("/getChannelAgent")
+    public AjaxResult getChannelAgent(String channelId){
+
+        List<IndustryRoleDto> userEntities = channelUserService.getChannelAgent(channelId) ;
+
+        return AjaxResult.success(userEntities) ;
     }
 
     /**

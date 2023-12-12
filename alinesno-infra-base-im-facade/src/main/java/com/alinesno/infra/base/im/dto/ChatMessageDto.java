@@ -8,6 +8,8 @@ import lombok.Data;
 @Data
 public class ChatMessageDto {
 
+    private long channelId ; // 所属频道Id
+
     private String roleType;
     private String icon ;
     private String name;

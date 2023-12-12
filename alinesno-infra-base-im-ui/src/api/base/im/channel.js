@@ -13,6 +13,7 @@ var managerUrl = {
   cleanUrl: prefix + "clean",
   detailUrl: prefix +"detail",
   removeUrl: prefix + "delete" ,
+  removeChannel: prefix + "removeChannel" ,
   exportUrl: prefix + "exportExcel",
   changeField: prefix + "changeField",
   downloadfile: prefix + "downloadfile" , 
@@ -71,6 +72,14 @@ export function updateChannel(data) {
     url: managerUrl.updateUrl ,
     method: 'put',
     data: data
+  })
+}
+
+// 删除应用
+export function removeChannel(id) {
+  return request({
+    url: managerUrl.removeChannel+ '?channelId=' + parseStrEmpty(id),
+    method: 'delete'
   })
 }
 

@@ -158,10 +158,6 @@ onUnmounted(() => {
   cmRef.value?.destroy()
 })
 
-// const onSubmit = () => {
-//   console.log('submit!')
-// }
-
 </script>
 
 <style lang="css">
