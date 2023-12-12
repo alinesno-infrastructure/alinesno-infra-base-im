@@ -72,7 +72,7 @@ const chatChannel = ref([
 const currentChatChannel = ref('0');
 
 // 若要动态添加频道并使其 ID 递增，你可以使用类似下面的方法：
-let nextId = chatChannel.value.length + 1;
+// let nextId = chatChannel.value.length + 1;
 
 // function addChannel(name, desc) {
 //   chatChannel.value.push({ id: String(nextId), channelName:name, channelDesc:desc, icon: '' });
