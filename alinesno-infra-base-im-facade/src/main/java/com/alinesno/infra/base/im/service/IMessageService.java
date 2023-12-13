@@ -31,4 +31,11 @@ public interface IMessageService extends IBaseService<MessageEntity> {
      * @param channelId
      */
     void saveChatMessage(List<WebMessageDto> dtoList, ChatMessageDto personDto, Long channelId);
+
+    /**
+     * 保存消息实体
+     * @param personDto
+     * @param channelId
+     */
+    void saveChatMessage(ChatMessageDto personDto, Long channelId);
 }

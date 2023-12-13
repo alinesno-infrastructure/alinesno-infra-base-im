@@ -1,5 +1,6 @@
 package com.alinesno.infra.base.im.gateway.controller;
 
+import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.alinesno.infra.base.im.entity.ChannelEntity;
 import com.alinesno.infra.base.im.service.IChannelService;
@@ -84,6 +85,31 @@ public class ChannelController extends BaseController<ChannelEntity, IChannelSer
 
         List<ChannelEntity> channelEntities = service.allMyChannel() ;
         return AjaxResult.success(channelEntities) ;
+    }
+
+    /**
+     * 查看所有的公开频道
+     * @return
+     */
+    @GetMapping("/allPublicChannel")
+    public AjaxResult allPublicChannel(){
+
+        List<ChannelEntity> channelEntities = service.allPublicChannel() ;
+        return AjaxResult.success(channelEntities) ;
+    }
+
+    /**
+     * 加入频道
+     * @param channelId
+     * @return
+     */
+    @GetMapping("/joinChannel")
+    public AjaxResult joinChannel(String channelId){
+
+        long userId = IdUtil.getSnowflakeNextId() ;
+        service.jobChannel(userId , channelId) ;
+
+        return AjaxResult.success() ;
     }
 
     @Override

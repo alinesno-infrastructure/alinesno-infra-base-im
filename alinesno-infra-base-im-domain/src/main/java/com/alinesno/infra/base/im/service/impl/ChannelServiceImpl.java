@@ -35,7 +35,7 @@ public class ChannelServiceImpl extends IBaseServiceImpl<ChannelEntity, ChannelM
 
         entity.setIcon("http://data.linesno.com/icons/sepcialist/dataset_" +randomNumber+ ".png");
         entity.setChannelId(IdUtil.nanoId());
-        entity.setChannelType(ChannelType.PRIVATE_CHANNEL.getValue());
+        entity.setChannelType(entity.getChannelType()) ;
 
         this.save(entity) ;
 
@@ -90,4 +90,19 @@ public class ChannelServiceImpl extends IBaseServiceImpl<ChannelEntity, ChannelM
 
         return list(queryWrapper);
     }
+
+    @Override
+    public List<ChannelEntity> allPublicChannel() {
+
+        LambdaQueryWrapper<ChannelEntity> queryWrapper = new LambdaQueryWrapper<>() ;
+        queryWrapper.eq(ChannelEntity::getHasDelete , HasDeleteEnums.LEGAL.value) ;
+
+        return list(queryWrapper) ;
+    }
+
+    @Override
+    public void jobChannel(long userId, String channelId) {
+        log.debug("userId = {} , channelId = {}" , userId , channelId);
+    }
+
 }

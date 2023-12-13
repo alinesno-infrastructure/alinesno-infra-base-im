@@ -26,7 +26,7 @@
               <el-row :gutter="20">
                 <el-col :span="18">
                     <div class="message-input">
-                      <input
+                      <textarea
                         class="input-chat-box"
                         v-model="message"
                         @input="handleInput"
@@ -35,7 +35,7 @@
 
                       <ul v-if="showDropdown" class="mention-dropdown">
                         <li v-for="(user, index) in users" :key="index" @click="mentionUser(user)">
-                          <img style="width:25px;height:25px;border-radius: 50%;position: absolute;" :src="'http://data.linesno.com/icons/sepcialist/dataset_' + (index + 35) + '.png'" />
+                          <img style="width:25px;height:25px;border-radius: 5px;position: absolute;" :src="'http://data.linesno.com/icons/sepcialist/dataset_' + (index + 35) + '.png'" />
                           <div style="margin-left: 30px;margin-top: 5px;">
                             {{ user.roleName }}
                           </div>
@@ -73,7 +73,7 @@
         </el-col>
 
         <el-col :span="6">
-          <SmartServiceAgent />
+          <SmartServiceAgent @mentionUser="mentionUser" />
         </el-col>
        
       </el-row>
@@ -101,7 +101,7 @@
       </template>
     </el-dialog>
 
-    <ChatUploadFile ref="uploadChildComp" />
+    <ChatUploadFile ref="uploadChildComp" @handlePushResponseMessageList="handlePushResponseMessageList" />
 
   </div>
 </template>
@@ -227,6 +227,12 @@ function handleSendUserMessage(formattedMessage){
     chatListRef.value.pushResponseMessageList(response.data);
   })
 }
+
+/** 发送消息组服务组件 */
+function handlePushResponseMessageList(item){
+  chatListRef.value.pushResponseMessageList(item);
+}
+
 
 /** 上传文档文件 */
 function handleUploadFile(){

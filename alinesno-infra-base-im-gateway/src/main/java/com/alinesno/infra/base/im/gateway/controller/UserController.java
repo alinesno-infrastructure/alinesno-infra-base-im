@@ -1,8 +1,10 @@
 package com.alinesno.infra.base.im.gateway.controller;
 
 import cn.hutool.core.util.IdUtil;
+import com.alinesno.infra.base.im.dto.IndustryRoleDto;
 import com.alinesno.infra.base.im.entity.UserEntity;
 import com.alinesno.infra.base.im.enums.AccountType;
+import com.alinesno.infra.base.im.service.IChannelUserService;
 import com.alinesno.infra.base.im.service.IUserService;
 import com.alinesno.infra.common.core.constants.SpringInstanceScope;
 import com.alinesno.infra.common.facade.pageable.DatatablesPageBean;
@@ -36,6 +38,9 @@ public class UserController extends BaseController<UserEntity, IUserService> {
     @Autowired
     private IUserService service;
 
+    @Autowired
+    private IChannelUserService channelUserService ;
+
     /**
      * 获取BusinessLogEntity的DataTables数据。
      *
@@ -56,27 +61,9 @@ public class UserController extends BaseController<UserEntity, IUserService> {
      * @return
      */
     @GetMapping("/listAllUser")
-    public AjaxResult listAllUser(){
+    public AjaxResult listAllUser(String channelId){
 
-        List<UserEntity> roleEntityList = new ArrayList<>();
-
-        String[] names = {"猛将将军吕布", "仁德主公刘备", "智谋丞相诸葛亮", "勇猛武圣关羽", "无敌独孤求败", "绝世美人貂蝉", "勇猛无敌孙策", "江东之子周瑜", "智勇双全孔明", "威猛张飞"};
-
-        for (int i = 0; i < 10; i++) {
-
-            UserEntity user = new UserEntity();
-
-            user.setId(IdUtil.getSnowflakeNextId());
-            user.setAccountType(AccountType.PLATFORM.getValue());
-            user.setAccountId((long) i);
-            user.setAccountName(names[i]);
-            user.setRoleName(names[i]);
-            user.setAvatar("avatar_" + i + ".jpg");
-            user.setStatus("Active");
-            user.setAgentId("agent_" + i);
-
-            roleEntityList.add(user);
-        }
+        List<UserEntity> roleEntityList = channelUserService.getChannelAgent(channelId)  ;
 
         return AjaxResult.success(roleEntityList) ;
     }

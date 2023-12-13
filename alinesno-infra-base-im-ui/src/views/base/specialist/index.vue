@@ -14,10 +14,7 @@
               <div class="header-body-main" style="margin-left:10px;margin-top: 5px;float: left;font-weight: bold;">
                 <span class="text-sm mr-2" style="color: var(--el-text-color-regular);">AIP智能体专家</span>
               </div>
-              <router-link target="_blank" to="/dashboard">
-                <el-button type="primary" icon="House" text bg size="default"
-                  style="margin-top: 2px;margin-left: 20px;">管理台</el-button>
-              </router-link>
+              <el-button type="primary" @click="openDashboard" icon="House" text bg size="default" style="margin-top: 2px;margin-left: 20px;">管理台</el-button>
             </div>
 
             <div class="header-avatar" style="float: right;margin-right: 10px;">
@@ -122,8 +119,7 @@ const onReady = (cm) => {
 }
 
 function openDashboard() {
-  // router.push('/dashboard')
-  window.open(href.href + '/dashboard', '_blank')
+  window.open('http://alinesno-infra-plat-console-ui.beta.plat.infra.linesno.com/', '_blank')
 }
 
 const handleGetParams = (params) => {
@@ -143,15 +139,6 @@ onMounted(() => {
   setTimeout(() => {
     cmRef.value?.refresh()
   }, 1000)
-
-  //  setTimeout(() => {
-  //    cmRef.value?.resize(300, 200)
-  //  }, 2000)
-
-  //  setTimeout(() => {
-  //    cmRef.value?.cminstance.isClean()
-  //  }, 3000)
-
 })
 
 onUnmounted(() => {

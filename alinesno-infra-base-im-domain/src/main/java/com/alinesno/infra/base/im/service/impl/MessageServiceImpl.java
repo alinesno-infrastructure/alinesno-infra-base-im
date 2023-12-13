@@ -139,6 +139,28 @@ public class MessageServiceImpl extends IBaseServiceImpl<MessageEntity , Message
         save(entity) ;
     }
 
+    @Override
+    public void saveChatMessage(ChatMessageDto personDto, Long channelId) {
+
+        MessageEntity entity = new MessageEntity() ;
+
+        entity.setContent(personDto.getChatText().toString()) ;
+        entity.setName(personDto.getName());
+        entity.setRoleType(personDto.getRoleType());
+        entity.setReaderType(personDto.getReaderType());
+        entity.setBusinessId(IdUtil.getSnowflakeNextIdStr());
+        entity.setAddTime(new Date()) ;
+        entity.setIcon("http://data.linesno.com/icons/sepcialist/dataset_23.png");
+        entity.setMessageId(IdUtil.getSnowflakeNextId());
+
+        entity.setMessageId(IdUtil.getSnowflakeNextId());
+        entity.setChannelId(channelId);
+        entity.setSenderId(IdUtil.getSnowflakeNextId());
+        entity.setReceiverId(IdUtil.getSnowflakeNextIdStr());
+
+        save(entity) ;
+    }
+
     private static MessageEntity getMessageEntity(Long channelId, StringBuilder chatTextBuilder, StringBuilder receiverId) {
         String chatText = chatTextBuilder.toString();
 

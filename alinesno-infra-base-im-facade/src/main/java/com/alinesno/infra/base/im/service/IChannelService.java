@@ -26,4 +26,18 @@ public interface IChannelService extends IBaseService<ChannelEntity> {
      * @return
      */
     List<ChannelEntity> allMyChannel();
+
+    /**
+     * 查询出所有公共频道
+     * @return
+     */
+    List<ChannelEntity> allPublicChannel();
+
+    /**
+     * 用户加入频道
+     * @param userId
+     * @param channelId
+     */
+    void jobChannel(long userId, String channelId);
+
 }

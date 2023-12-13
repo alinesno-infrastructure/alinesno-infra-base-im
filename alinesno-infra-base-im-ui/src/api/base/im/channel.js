@@ -19,9 +19,19 @@ var managerUrl = {
   downloadfile: prefix + "downloadfile" , 
   createChannel: prefix + "createChannel" ,
   allMyChannel: prefix + "allMyChannel" ,
+  allPublicChannel: prefix + "allPublicChannel" ,
+  joinChannel: prefix + "joinChannel" ,
 }
 
-// 新增应用
+// 加入频道
+export function joinChannel(channelId){
+  return request({
+    url: managerUrl.joinChannel + '?channelId=' + channelId , 
+    method: 'get'
+  })
+}
+
+// 新增频道
 export function createChannel(data) {
   return request({
     url: managerUrl.createChannel ,
@@ -30,7 +40,7 @@ export function createChannel(data) {
   })
 }
 
-// 查询应用列表
+// 查询频道列表
 export function listChannel(query) {
   return request({
     url: managerUrl.datatables ,
@@ -39,7 +49,15 @@ export function listChannel(query) {
   })
 }
 
-// 查询应用详细
+// 查询所有频道详细
+export function allPublicChannel() {
+  return request({
+    url: managerUrl.allPublicChannel, 
+    method: 'get'
+  })
+}
+
+// 查询频道详细
 export function allMyChannel() {
   return request({
     url: managerUrl.allMyChannel , 
@@ -47,7 +65,7 @@ export function allMyChannel() {
   })
 }
 
-// 查询应用详细
+// 查询频道详细
 export function getChannel(id) {
   return request({
     url: managerUrl.detailUrl + '/' + parseStrEmpty(id),
@@ -55,7 +73,7 @@ export function getChannel(id) {
   })
 }
 
-// 新增应用
+// 新增频道
 export function addChannel(data) {
   return request({
     url: managerUrl.saveUrl ,
@@ -66,7 +84,7 @@ export function addChannel(data) {
 
 
 
-// 修改应用
+// 修改频道
 export function updateChannel(data) {
   return request({
     url: managerUrl.updateUrl ,
@@ -75,7 +93,7 @@ export function updateChannel(data) {
   })
 }
 
-// 删除应用
+// 删除频道
 export function removeChannel(id) {
   return request({
     url: managerUrl.removeChannel+ '?channelId=' + parseStrEmpty(id),
@@ -83,7 +101,7 @@ export function removeChannel(id) {
   })
 }
 
-// 删除应用
+// 删除频道
 export function delChannel(id) {
   return request({
     url: managerUrl.removeUrl + '/' + parseStrEmpty(id),
@@ -91,7 +109,7 @@ export function delChannel(id) {
   })
 }
 
-// 应用密码重置
+// 频道密码重置
 export function resetChannelPwd(id, password) {
   const data = {
     id,
@@ -104,7 +122,7 @@ export function resetChannelPwd(id, password) {
   })
 }
 
-// 应用状态修改
+// 频道状态修改
 export function changeChannelStatus(id, status) {
   const data = {
     id,

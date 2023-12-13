@@ -14,7 +14,7 @@
           </div>
         </div>
 
-        <div class="chat-ai-say-body" :class="item.roleType == 'person' ? 'say-right-window' : ''" style="max-width:90%">
+        <div class="chat-ai-say-body" :class="item.roleType == 'person' ? 'say-right-window' : ''" style="max-width:calc(100% - 135px)">
           <div class="say-message-info" v-if="item.roleType == 'person'"> 
             <span style="margin-left:10px" :class="item.showTools?'show-tools':'hide-tools'"> {{ item.dateTime }}</span> {{ item.name }} 
           </div>
@@ -22,11 +22,10 @@
             {{ item.name }}  <span style="margin-left:10px" :class="item.showTools?'show-tools':'hide-tools'"> {{ item.dateTime }} </span>
           </div>
 
-          <div class="say-message-body markdown-body" v-if="item.readerType === 'html'" v-html="item.chatText"></div>
-          <div class="say-message-body markdown-body" v-else v-html="readerHtml(item.chatText)"></div>
+          <div class="say-message-body markdown-body" v-html="readerHtml(item.chatText)"></div>
 
             <div class="chat-ai-say-tools" style="margin-top: 3px;width: 100%;text-align: right;" :class="item.showTools?'show-tools':'hide-tools'">
-                <el-button type="danger" link icon="Promotion" size="small" @click="handleBusinessIdToMessageBox(item)">执行</el-button>
+                <el-button type="danger" link icon="Promotion" size="small" @click="handleBusinessIdToMessageBox(item)">选择</el-button>
                 <el-button type="primary" link icon="EditPen" size="small" @click="handleEditGenContent(item)">编辑</el-button>
                 <el-button type="primary" link icon="Refresh" size="small" @click="handleRecyleGenContent(item)">重新生成</el-button>
             </div>
@@ -97,6 +96,10 @@ const pushResponseMessageList = (message) => {
   initChatBoxScroll();
 }
 
+const handleRecyleGenContent = (item) => {
+  console.log('handleRecyleGenContent item = ' + item) ;
+}
+
 function initChatBoxScroll() {
 
   const element = innerRef.value;  // 获取滚动元素
@@ -108,7 +111,7 @@ function initChatBoxScroll() {
 }
 
 const mdi = new MarkdownIt({
-  html: false,
+  html: true,
   linkify: true,
   highlight(code, language) {
     const validLang = !!(language && hljs.getLanguage(language));

@@ -2,6 +2,7 @@ package com.alinesno.infra.base.im.service;
 
 import com.alinesno.infra.base.im.dto.IndustryRoleDto;
 import com.alinesno.infra.base.im.entity.ChannelUserEntity;
+import com.alinesno.infra.base.im.entity.UserEntity;
 import com.alinesno.infra.common.facade.services.IBaseService;
 
 import java.util.List;
@@ -14,6 +15,6 @@ public interface IChannelUserService extends IBaseService<ChannelUserEntity> {
      * @param channelId
      * @return
      */
-    List<IndustryRoleDto> getChannelAgent(String channelId);
+    List<UserEntity> getChannelAgent(String channelId);
 
 }

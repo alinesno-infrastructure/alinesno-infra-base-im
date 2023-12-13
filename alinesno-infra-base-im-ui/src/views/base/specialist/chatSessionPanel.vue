@@ -28,10 +28,16 @@
             <el-button type="danger" 
                 :class="item.showTools && item.channelType !== '1' ?'show-tools':'hide-tools'"  
                 link
-                style="position: absolute;top: 10px;right: 10px;" 
+                style="position: absolute;top: 5px;right: 10px;" 
                 icon="Close" 
+                size="small"
                 @click="handelDeleteChannel(item)">删除</el-button>
           </el-col>
+          <span class="channel-type">
+              <i v-if="item.channelType === '9'" class="fa-solid fa-users-gear"></i> 
+              <i v-if="item.channelType === '2'" class="fa-solid fa-user-ninja"></i> 
+              <i v-if="item.channelType === '1'" class="fa-solid fa-user-shield"></i> 
+          </span>
         </el-row>
       </div>
     </el-scrollbar>
@@ -71,14 +77,6 @@ const chatChannel = ref([
 ]);
 const currentChatChannel = ref('0');
 
-// 若要动态添加频道并使其 ID 递增，你可以使用类似下面的方法：
-// let nextId = chatChannel.value.length + 1;
-
-// function addChannel(name, desc) {
-//   chatChannel.value.push({ id: String(nextId), channelName:name, channelDesc:desc, icon: '' });
-//   nextId++;
-// }
-
 const emit = defineEmits(['onSendParams'])
 
 /** 选择当前频道 */
@@ -90,7 +88,6 @@ function handleSelectChatChannel(item) {
       query: { 'channel': channelId }
   })
 
-  // window.location.reload();
 }
 
 /** 创建频道 */
@@ -163,6 +160,10 @@ watch(() =>  router.currentRoute.value.path,
   .chatChannel-session:hover {
     color: #409EFF;
     background: #fafafa;
+
+    .channel-type{
+      color: #409EFF !important;
+    }
   }
 
   .select-chatChannel {
@@ -194,12 +195,20 @@ watch(() =>  router.currentRoute.value.path,
       width: calc(100% - 0px);
       color: #a5a5a5;
       line-height: 16px;
+      margin-top: 3px;
     }
 
     .chatChannel-icon {
       // position: absolute;
       margin: 8px;
       text-align: center;
+    }
+
+    .channel-type{
+      position: absolute;
+      bottom: 8px;
+      right: 15px;
+      color: #a5a5a5;
     }
   }
 

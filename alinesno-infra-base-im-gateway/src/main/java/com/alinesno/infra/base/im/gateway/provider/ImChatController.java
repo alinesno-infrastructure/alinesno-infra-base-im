@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alinesno.infra.base.im.adapter.SmartAssistantConsumer;
 import com.alinesno.infra.base.im.adapter.SmartBrainConsumer;
 import com.alinesno.infra.base.im.dto.*;
+import com.alinesno.infra.base.im.entity.UserEntity;
 import com.alinesno.infra.base.im.service.IChannelUserService;
 import com.alinesno.infra.base.im.service.IMessageService;
 import com.alinesno.infra.base.im.service.ITaskService;
@@ -169,7 +170,7 @@ public class ImChatController extends SuperController {
     @GetMapping("/getChannelAgent")
     public AjaxResult getChannelAgent(String channelId){
 
-        List<IndustryRoleDto> userEntities = channelUserService.getChannelAgent(channelId) ;
+        List<UserEntity> userEntities = channelUserService.getChannelAgent(channelId) ;
 
         return AjaxResult.success(userEntities) ;
     }

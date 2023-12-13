@@ -19,7 +19,6 @@ spring:
     restart:
       enabled: true
 
-
 # 自动生成表
 actable:
   table:

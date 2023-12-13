@@ -5,9 +5,9 @@
          <el-upload
             ref="uploadRef"
             :limit="1"
-            accept=".xlsx, .xls"
+            accept=".xlsx, .xls, .doc, .docx"
             :headers="upload.headers"
-            :action="upload.url + '?updateSupport=' + upload.updateSupport"
+            :action="upload.url + '?channelId=' + upload.channelId"
             :disabled="upload.isUploading"
             :on-progress="handleFileUploadProgress"
             :on-success="handleFileSuccess"
@@ -41,9 +41,19 @@
 <script setup name="User">
 
 import { getToken } from "@/utils/auth";
+import { onMounted } from 'vue';
+import { getParam } from '@/utils/ruoyi'
+
+const router = useRouter();
+const { proxy } = getCurrentInstance();
+
+// 定义派发事件
+const emit = defineEmits(['handlePushResponseMessageList'])
 
 /*** 用户导入参数 */
 const upload = reactive({
+  // 当前频道ID
+  channelId: null,
   // 是否显示弹出层（用户导入）
   open: false,
   // 弹出层标题（用户导入）
@@ -55,12 +65,41 @@ const upload = reactive({
   // 设置上传的请求头部
   headers: { Authorization: "Bearer " + getToken() },
   // 上传的地址
-  url: import.meta.env.VITE_APP_BASE_API + "/system/user/importData"
+  url: import.meta.env.VITE_APP_BASE_API + "/v1/api/infra/base/im/knowledge//importData"
 });
 
 function handleOpenUpload(val){
   upload.open = val;
 }
+
+/** 下载模板操作 */
+function importTemplate() {
+  proxy.download("/v1/api/infra/base/im/knowledge/importTemplate", {
+  }, `user_template_${new Date().getTime()}.xlsx`);
+};
+/**文件上传中处理 */
+const handleFileUploadProgress = (event, file, fileList) => {
+  upload.isUploading = true;
+};
+/** 文件上传成功处理 */
+const handleFileSuccess = (response, file, fileList) => {
+  upload.open = false;
+  upload.isUploading = false;
+  proxy.$refs["uploadRef"].handleRemove(file);
+
+  emit("handlePushResponseMessageList" , response.data) ;
+
+//   proxy.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", "导入结果", { dangerouslyUseHTMLString: true });
+};
+/** 提交上传文件 */
+function submitFileForm() {
+  proxy.$refs["uploadRef"].submit();
+};
+
+onMounted(() => {
+   upload.channelId = getParam("channel") ;
+})
+
 
 defineExpose({
   handleOpenUpload,

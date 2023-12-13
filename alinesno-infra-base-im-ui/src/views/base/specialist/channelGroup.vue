@@ -34,7 +34,7 @@
                 {{ item.desc }}
               </div>
               <el-button type="primary" @click="handleSetChannelId(item.id)" style="position: absolute;right: 10px;" text bg>
-                <i class="fa-brands fa-google-play icon-btn"></i> 进入
+                <i class="fa-solid fa-hammer icon-btn"></i> 创建 
               </el-button>
             </div>
           </li>
@@ -70,6 +70,23 @@
                 </el-form-item>
               </el-col>
           </el-row>
+
+          <el-row>
+              <el-col :span="12">
+                <el-form-item label="频道类型" prop="channelType">
+                  <el-select size="large" v-model="form.channelType" placeholder="选择频道类型">
+                    <el-option label="公共频道" value="9" />
+                    <el-option label="个人频道" value="2" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12" v-if="form.channelType === '9'">
+                <el-form-item label="进入密钥" prop="channelKey">
+                    <el-input size="large" v-model="form.channelKey" placeholder="请输入进入密钥" maxlength="30" />
+                </el-form-item>
+              </el-col>
+          </el-row>
+
         </el-form> 
         <div class="dialog-footer">
             <el-button type="primary" size="large" bg text @click="submitChannelForm" style="float:right;margin-top:20px" icon="Link">创建频道</el-button>
@@ -104,10 +121,13 @@ const centerDialogVisible = ref(false)
 const router = useRouter();
 
 const data = reactive({
-  form: {},
+  form: {
+    channelType: '2'
+  },
   rules: {
     channelName: [{ required: true, message: "频道名称不能为空", trigger: "blur" }],
     channelDesc: [{ required: true, message: "频道描述不能为空", trigger: "blur" }],
+    channelType: [{ required: true, message: "频道类型不能为空", trigger: "blur" }],
   }
 });
 
@@ -120,9 +140,6 @@ const chatChannelTemplate = ref([
   { id: '4', name: '数据分析频道', desc: '数据分析技术和方法的讨论', icon: '' },
   { id: '5', name: '考核题目设计频道', desc: '考核题目设计相关讨论', icon: '' },
   { id: '6', name: '文档生成频道', desc: '讨论文档生成工具和最佳实践', icon: '' },
-  { id: '7', name: '技术架构设计频道', desc: '关于技术架构设计的讨论', icon: '' },
-  { id: '8', name: '解决方案讨论频道', desc: '讨论解决问题的不同方案', icon: '' },
-  { id: '9', name: '压力测试频道', desc: '关于系统压力测试的话题', icon: '' },
 ]);
 
 const goBack = () => {
