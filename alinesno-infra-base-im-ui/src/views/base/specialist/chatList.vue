@@ -148,7 +148,7 @@ function handleEditGenContent(item){
 }
 
 function showTools(item) {
-    this.messageList.forEach((i) => {
+    messageList.value.forEach((i) => {
       i.showTools = i === item; // 只有当前项的 showTools 被设置为 true
     });
 }
