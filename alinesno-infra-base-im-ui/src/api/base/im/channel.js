@@ -21,6 +21,15 @@ var managerUrl = {
   allMyChannel: prefix + "allMyChannel" ,
   allPublicChannel: prefix + "allPublicChannel" ,
   joinChannel: prefix + "joinChannel" ,
+  getDefaultChannelId: prefix + "getDefaultChannelId" ,
+}
+
+// 获取默认频道 
+export function getDefaultChannelId(){
+  return request({
+    url: managerUrl.getDefaultChannelId , 
+    method: 'get'
+  })
 }
 
 // 加入频道

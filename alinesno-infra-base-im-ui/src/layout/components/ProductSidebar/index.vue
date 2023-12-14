@@ -5,19 +5,14 @@
         <i class="fa-solid fa-desktop"></i>
       </el-menu-item>
 
-      <el-menu-item index="2" @click="openServiceList">
-        <i class="fa-solid fa-sailboat"></i>
-      </el-menu-item>
-
-      <el-menu-item index="3" @click="openSmartService">
-        <i class="fa-solid fa-user-shield"></i>
-      </el-menu-item>
+      <el-tooltip effect="dark" :content="item.desc" v-for="item in menuItems" :key="item.id" placement="right">
+        <el-menu-item :index="item.id" @click="openServiceList(item.link)">
+          <i :class="item.icon"></i>
+        </el-menu-item>
+      </el-tooltip>
     </el-menu>
 
     <el-menu style="" class="el-menu-vertical acp-suggest" :collapse="isCollapse" @open="handleOpen" @close="handleClose">
-      <el-menu-item index="11" @click="jumpToConstomTheme">
-        <i class="fa-solid fa-file-pen"></i>
-      </el-menu-item>
       <el-menu-item index="12" @click="dialogVisible = true">
         <i class="fa-solid fa-paper-plane"></i>
       </el-menu-item>
@@ -43,7 +38,6 @@
         </el-form-item>
 
       </el-form>
-
     </el-dialog>
 
   </div>
@@ -54,14 +48,24 @@
 const dialogVisible = ref(false)
 const router = useRouter();
 
+// 菜单列表
+const menuItems = ref([
+  { id: '3', icon: 'fa-solid fa-masks-theater', link: '/agentList', desc: '角色列表' },
+  // { id: '2', icon: 'fa-solid fa-feather', link: '/discover', desc: '发现频道' },
+  // {id:'5' , icon:'fa-brands fa-wordpress' , link:'/brain/task/index' , desc:'生成任务'},
+  // {id:'8' , icon:'fa-solid fa-file-pdf' , link:'/brain/loaderData/index' , desc:'知识库管理'},
+  // {id:'4' , icon:'fa-brands fa-skype' , link:'/brain/catalog/index' , desc:'业务分类'},
+  // {id:'7' , icon:'fa-solid fa-chart-simple' , link:'/brain/record/index' , desc:'请求记录'},
+]);
+
+// 打开服务市场
+function openServiceList(_path) {
+  router.push({ path: _path });
+}
+
 // 打开客户配置
 function jumpToConstomTheme() {
   router.push({ path: "/dashboard/dashboardTheme" });
-}
-
-// 打开服务市场
-function openServiceList() {
-  router.push({ path: "/dashboard/serviceList" });
 }
 
 // 打开首页

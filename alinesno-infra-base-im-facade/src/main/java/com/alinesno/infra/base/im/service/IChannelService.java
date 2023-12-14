@@ -40,4 +40,9 @@ public interface IChannelService extends IBaseService<ChannelEntity> {
      */
     void jobChannel(long userId, String channelId);
 
+    /**
+     * 获取到默认的渠道
+     * @return
+     */
+    Long getDefaultChannelId();
 }

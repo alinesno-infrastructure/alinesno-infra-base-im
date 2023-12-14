@@ -1,6 +1,6 @@
 <template>
   <div v-loading="loading">
-
+<!-- 
     <el-row>
       <el-col :span="24" style="border-bottom: 1px solid rgb(229, 229, 229);height: 55px;">
         <div class="flex items-center" style="padding: 9px;border-radius: 5px;color: #242e42;">
@@ -39,7 +39,7 @@
 
         </div>
       </el-col>
-    </el-row>
+    </el-row> -->
 
     <!-- 控制列表 -->
     <el-container style="height: calc(100vh - 56px);">

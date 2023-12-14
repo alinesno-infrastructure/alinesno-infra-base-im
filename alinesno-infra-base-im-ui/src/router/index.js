@@ -1,7 +1,7 @@
 import { createWebHistory, createRouter } from 'vue-router'
 /* Layout */
-//import Layout from '@/layout/SaaSLayout'
-import Layout from '@/layout'
+import Layout from '@/layout/SaaSLayout'
+// import Layout from '@/layout'
 
 /**
  * Note: 路由配置项
@@ -54,24 +54,23 @@ export const constantRoutes = [
     hidden: true,
     children: [
       {
-        path: '/dashboard',
-        component: () => import('@/views/index'),
-        name: '/dashboard',
+        path: '/index',
+        component: () => import('@/views/base/specialist/index'),
+        name: '/index',
         meta: { title: '首页', icon: 'dashboard', affix: true }
       },
-
-      // {
-      //   path: '/dashboard/smartService',
-      //   component: () => import('@/views/smartService'),
-      //   name: '/dashboard/smartService',
-      //   meta: { title: '智能客服', icon: 'dashboard', affix: true }
-      // },
-      // {
-      //   path: '/dashboard/serviceList',
-      //   component: () => import('@/views/serviceList'),
-      //   name: '/dashboard/serviceList',
-      //   meta: { title: '服务列表', icon: 'dashboard', affix: true }
-      // },
+      {
+        path: '/dashboard/smartService',
+        component: () => import('@/views/smartService'),
+        name: '/dashboard/smartService',
+        meta: { title: '智能客服', icon: 'dashboard', affix: true }
+      },
+      {
+        path: '/agentList',
+        component: () => import('@/views/base/specialist/agentList'),
+        name: '/agentList',
+        meta: { title: '服务列表', icon: 'dashboard', affix: true }
+      },
       {
         path: '/dashboard/suportTechnique',
         component: () => import('@/views/suportTechnique'),
@@ -84,22 +83,8 @@ export const constantRoutes = [
         name: '/dashboard/learnPanel',
         meta: { title: '学习手册', icon: 'dashboard', affix: true }
       },
-
       // ->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
     ]
-  },
-  {
-    path: '/index',
-    component: () => import('@/views/base/specialist/index'),
-    name: '/index',
-    meta: { title: '内容生成专家', icon: 'dashboard', affix: true }
-  },
-  {
-    path: '/base/specialist/index',
-    component: () => import('@/views/base/specialist/index'),
-    name: '/base/specialist/index',
-    meta: { title: '内容生成专家', icon: 'dashboard', affix: true }
   },
   {
     path: '/user',

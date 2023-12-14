@@ -109,7 +109,8 @@ let { proxy } = getCurrentInstance();
 import Cookies from 'js-cookie'
 
 import {
-  createChannel
+  createChannel , 
+  getDefaultChannelId
 } from '@/api/base/im/channel'
 
 import { reactive, ref , onMounted } from 'vue'
@@ -192,7 +193,18 @@ onMounted(() => {
   const channelId = getParam("channel");
 
   if(channelId == undefined) {
-    centerDialogVisible.value = true;
+    // centerDialogVisible.value = true;
+
+    const loading = ElLoading.service({
+      lock: true,
+      text: 'Loading',
+      background: 'rgba(0, 0, 0, 0.7)',
+    })
+
+    getDefaultChannelId().then(response => {
+      loading.close() ;
+      handleSetChannelId(response.data) ;
+    })
   }
 
 })

@@ -105,4 +105,19 @@ public class ChannelServiceImpl extends IBaseServiceImpl<ChannelEntity, ChannelM
         log.debug("userId = {} , channelId = {}" , userId , channelId);
     }
 
+    @Override
+    public Long getDefaultChannelId() {
+
+        List<ChannelEntity> list = allMyChannel() ;
+        long channelId = 0L;
+
+        for(ChannelEntity e : list){
+            if(e.getChannelType().equals(ChannelType.PERSONAL_PUBLIC_CHANNEL.getValue())){
+                channelId = e.getId() ;
+            }
+        }
+
+        return channelId;
+    }
+
 }

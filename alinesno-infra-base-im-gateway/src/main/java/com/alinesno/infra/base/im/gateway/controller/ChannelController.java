@@ -77,6 +77,18 @@ public class ChannelController extends BaseController<ChannelEntity, IChannelSer
     }
 
     /**
+     * 获取到用户默认的频道
+     * @return
+     */
+    @GetMapping("/getDefaultChannelId")
+    public AjaxResult getDefaultChannelId(){
+
+        Long channelId = service.getDefaultChannelId() ;
+
+        return AjaxResult.success("操作成功." , channelId) ;
+    }
+
+    /**
      * 查询出我所有的渠道
      * @return
      */
