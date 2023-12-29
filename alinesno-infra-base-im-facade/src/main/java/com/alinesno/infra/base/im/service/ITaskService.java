@@ -12,7 +12,7 @@ public interface ITaskService {
     /**
      * 保存任务
      */
-    void addTask(long messageId , String businessId) ;
+    void addTask(long channelId , String businessId) ;
 
     /**
      * 获取已经完成的任务通知

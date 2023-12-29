@@ -1,10 +1,10 @@
 <template>
   <el-scrollbar height="100vh">
 
-  <div class="container-main" style="padding-top: 20px;padding-bottom:50px;background-color: #fff;">
+  <div class="container-main" style="padding-bottom:50px;background-color: #fff;">
       <div class="tpl-app app-main-content" v-loading="fullscreenLoading" style="max-width: 1240px;">
 
-            <div class="header">
+            <!-- <div class="header">
                 自动化Agent列表
                 <span style="font-size: 13px;color: #a5a5a5;">这里包含所有需要运营的Agent服务列表，你可以理解成一个Agent就是一个员工</span>
             </div>
@@ -24,7 +24,7 @@
                         Agent是集成自动化能力的基础服务模块建设能力
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <section class="section" v-for="(type, index) in productList" :key="index">
                 <h2 class="section-title">
@@ -432,7 +432,7 @@ function openService(item){
   }
 
   .section {
-      padding: 26px 20px 30px;
+      padding: 0px 20px 30px;
 
       &:last-child {
           border-bottom: 0 none;

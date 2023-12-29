@@ -27,9 +27,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableActable
 @EnableScheduling
 @EnableInfraSsoApi
-@Configuration
 @ForestScan(basePackages = "com.alinesno.infra.base.im.adapter")
 @MapperScan("com.alinesno.infra.base.im.mapper")
+@Configuration
 public class AppConfiguration {
 
     /**
