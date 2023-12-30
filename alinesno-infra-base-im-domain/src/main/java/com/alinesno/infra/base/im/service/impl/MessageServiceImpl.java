@@ -93,7 +93,7 @@ public class MessageServiceImpl extends IBaseServiceImpl<MessageEntity , Message
     }
 
     @Override
-    public void saveChatMessage(List<WebMessageDto> parsedMessages, ChatMessageDto personDto, Long channelId) {
+    public void saveChatMessage(List<WebMessageDto> parsedMessages, ChatMessageDto personDto, long channelId , long businessId) {
         // 处理解析后的消息对象
         StringBuilder receiverId = new StringBuilder();
         for (WebMessageDto message : parsedMessages) {
@@ -125,7 +125,7 @@ public class MessageServiceImpl extends IBaseServiceImpl<MessageEntity , Message
         entity.setName(personDto.getName());
         entity.setRoleType(personDto.getRoleType());
         entity.setReaderType(personDto.getReaderType());
-        entity.setBusinessId(IdUtil.getSnowflakeNextIdStr());
+        entity.setBusinessId(businessId);
         entity.setAddTime(new Date()) ;
         entity.setIcon("http://data.linesno.com/icons/sepcialist/dataset_23.png");
         entity.setMessageId(IdUtil.getSnowflakeNextId());
@@ -147,7 +147,7 @@ public class MessageServiceImpl extends IBaseServiceImpl<MessageEntity , Message
         entity.setName(personDto.getName());
         entity.setRoleType(personDto.getRoleType());
         entity.setReaderType(personDto.getReaderType());
-        entity.setBusinessId(IdUtil.getSnowflakeNextIdStr());
+        entity.setBusinessId(IdUtil.getSnowflakeNextId());
         entity.setAddTime(new Date()) ;
         entity.setIcon("http://data.linesno.com/icons/sepcialist/dataset_23.png");
         entity.setMessageId(IdUtil.getSnowflakeNextId());

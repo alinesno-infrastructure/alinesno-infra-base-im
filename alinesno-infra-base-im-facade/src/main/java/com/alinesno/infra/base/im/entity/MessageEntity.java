@@ -51,7 +51,7 @@ public class MessageEntity extends InfraBaseEntity {
     @Column(type = MySqlTypeConstant.VARCHAR, length = 6, isNull = true, comment = "读取方式")
     private String readerType ; // 读取方式和类型
 
-    @Column(type = MySqlTypeConstant.VARCHAR, length = 32, isNull = true, comment = "业务唯一ID")
-    private String businessId ; // 生成的唯一业务ID标识
+    @Column(type = MySqlTypeConstant.BIGINT, length = 32, isNull = true, comment = "业务唯一ID")
+    private long businessId ; // 生成的唯一业务ID标识
 
 }

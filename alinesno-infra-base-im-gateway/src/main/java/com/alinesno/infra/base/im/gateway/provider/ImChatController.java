@@ -78,7 +78,7 @@ public class ImChatController extends SuperController {
         ChatMessageDto personDto = AgentUtils.getChatMessageDto(dtoList, roleDto , businessId , text);
 
         // 保存消息实体
-        messageService.saveChatMessage(dtoList , personDto , channelId) ;
+        messageService.saveChatMessage(dtoList , personDto , channelId , businessId) ;
         return AjaxResult.success(personDto) ;
     }
 

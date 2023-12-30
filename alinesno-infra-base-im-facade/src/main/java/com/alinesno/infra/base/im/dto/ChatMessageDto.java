@@ -17,6 +17,7 @@ public class ChatMessageDto {
     private Object chatText;
     private String readerType ; // 读取方式和类型
 
-    private String businessId ; // 生成的唯一业务ID标识
+    private boolean isLoading = false ; // 是否还在加载中
+    private long businessId ; // 生成的唯一业务ID标识
 
 }

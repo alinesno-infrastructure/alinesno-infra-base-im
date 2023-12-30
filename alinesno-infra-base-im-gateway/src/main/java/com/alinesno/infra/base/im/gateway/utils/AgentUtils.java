@@ -47,6 +47,7 @@ public class AgentUtils {
         personDto.setRoleType("agent");
         personDto.setReaderType("html");
         personDto.setBusinessId(businessId);
+        personDto.setLoading(true);
         personDto.setDateTime(DateUtil.formatDateTime(new Date()));
         personDto.setIcon("http://data.linesno.com/icons/sepcialist/dataset_23.png");
         personDto.setDateTime(DateUtil.formatDateTime(new Date()));
