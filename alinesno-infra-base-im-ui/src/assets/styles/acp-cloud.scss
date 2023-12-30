@@ -168,6 +168,7 @@ $chartColor: #3b5998;
 // 主面板
 .acp-dashboard {
   background-color: #fafafa;
+  height: 100%;
   padding: 10px !important;
 
   .acp-dashboard-panel {
@@ -928,9 +929,8 @@ $chartColor: #3b5998;
   }
 
   .robot-chat-body {
-    height: calc(100vh - 160px);
+    height: calc(100vh - 130px);
     background: #fff;
-    // border-bottom: 1px solid rgba(230, 231, 235, 0.3) ; 
   }
 
   .robot-chat-footer {

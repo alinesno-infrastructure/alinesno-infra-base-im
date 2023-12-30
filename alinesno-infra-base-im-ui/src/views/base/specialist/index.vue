@@ -1,49 +1,9 @@
 <template>
   <div v-loading="loading">
-<!-- 
-    <el-row>
-      <el-col :span="24" style="border-bottom: 1px solid rgb(229, 229, 229);height: 55px;">
-        <div class="flex items-center" style="padding: 9px;border-radius: 5px;color: #242e42;">
-
-          <div class="head-body" style="margin-top: 5px;margin:auto;width:100%">
-
-            <div class="header-avatar" style="float: left;margin-right: 10px;">
-              <span class="el-avatar el-avatar--square mr-4" style="--el-avatar-size: 32px;margin-left:10px;float: left;">
-                <img src="http://portal.infra.linesno.com/logo.png" style="object-fit: cover;background-color: #fff;">
-              </span>
-              <div class="header-body-main" style="margin-left:10px;margin-top: 5px;float: left;font-weight: bold;">
-                <span class="text-sm mr-2" style="color: var(--el-text-color-regular);">AIP智能体专家</span>
-              </div>
-              <el-button type="primary" @click="openDashboard" icon="House" text bg size="default" style="margin-top: 2px;margin-left: 20px;">管理台</el-button>
-            </div>
-
-            <div class="header-avatar" style="float: right;margin-right: 10px;">
-              <span class="el-avatar el-avatar--circle mr-3" style="--el-avatar-size: 32px;margin-left:10px;">
-                <img src="https://foruda.gitee.com/avatar/1676897721015308137/41655_landonniao_1656075872.png"
-                  style="object-fit: cover;">
-              </span>
-              <div class="header-body-main" style="float: left;margin-left:10px;margin-top: 10px;font-size: 13px;">
-                <span class="text-sm mr-2" style="color: var(--el-text-color-regular);">罗小东(数据库高级工程师)</span>
-              </div>
-            </div>
-
-            <div class="header-body-main" style="float: right;margin-top: 10px;font-size: 13px;">
-              <span class="text-sm mr-2" style="margin-left:10px;color: var(--el-text-color-regular);">角色标识 : uvaWo9Es
-                <el-icon>
-                  <CopyDocument />
-                </el-icon>
-              </span>
-            </div>
-
-          </div>
-
-        </div>
-      </el-col>
-    </el-row> -->
 
     <!-- 控制列表 -->
     <el-container style="height: calc(100vh - 56px);">
-      <el-aside width="330px" style="background: #fff;padding:10px;border-right:1px solid #e6e6e6">
+      <el-aside width="330px" style="background: #fff;height:100%; padding:10px;border-right:1px solid #e6e6e6">
         <ChatSessionPanel @onSendParams="handleGetParams" />
       </el-aside>
       <el-main style="padding:0px;">

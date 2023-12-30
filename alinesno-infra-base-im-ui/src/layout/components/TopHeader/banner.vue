@@ -24,7 +24,7 @@ export default {
   },
   data() {
 
-    let saasTitle = 'AIP智能设施'
+    let saasTitle = 'AIP智能体平台'
     let enableLogo = true;
     let saasUrl = 'http://alinesno-infra-plat-console-ui.beta.plat.infra.linesno.com' ;
     let saasLogoUrl = 'http://portal.infra.linesno.com/logo.png' ; 

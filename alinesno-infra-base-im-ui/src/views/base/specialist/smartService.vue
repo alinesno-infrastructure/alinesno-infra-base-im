@@ -311,8 +311,8 @@ function handleChatMessage(channelId) {
 function handleEditorContent(bId){
   editDialogVisible.value = true ; 
 
-  chatAssistantContent(businessId.value).then(response => {
-    currentTaskContent.value = response.data.genContent ; 
+  chatAssistantContent(bId).then(response => {
+    currentTaskContent.value = response.data.assistantContent; 
     editorLoading.value = false ;
   })
 }

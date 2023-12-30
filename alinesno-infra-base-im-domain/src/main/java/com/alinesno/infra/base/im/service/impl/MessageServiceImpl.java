@@ -84,7 +84,6 @@ public class MessageServiceImpl extends IBaseServiceImpl<MessageEntity , Message
                 dto.setBusinessId(e.getBusinessId());
                 dto.setIcon(e.getIcon());
                 dto.setDateTime(DateUtil.formatDateTime(e.getAddTime()));
-                dto.setBusinessId(IdUtil.getSnowflakeNextIdStr());
 
                 list.add(dto) ;
             }

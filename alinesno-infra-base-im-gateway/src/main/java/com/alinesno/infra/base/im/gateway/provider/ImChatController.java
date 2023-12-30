@@ -7,6 +7,7 @@ import com.alinesno.infra.base.im.adapter.SmartAssistantConsumer;
 import com.alinesno.infra.base.im.adapter.SmartBrainConsumer;
 import com.alinesno.infra.base.im.dto.*;
 import com.alinesno.infra.base.im.entity.UserEntity;
+import com.alinesno.infra.base.im.gateway.utils.AgentUtils;
 import com.alinesno.infra.base.im.service.IChannelUserService;
 import com.alinesno.infra.base.im.service.IMessageService;
 import com.alinesno.infra.base.im.service.ITaskService;
@@ -50,7 +51,7 @@ public class ImChatController extends SuperController {
     @GetMapping("/chatAssistantContent")
     public AjaxResult chatAssistantContent(String businessId){
 
-        AjaxResult result = smartBrainConsumer.chatContent(businessId) ;
+        AjaxResult result = smartAssistantConsumer.queryContent(businessId) ; //  smartBrainConsumer.chatContent(businessId) ;
         log.debug("chatContent result = {}" , result);
 
         return result ;
@@ -65,26 +66,22 @@ public class ImChatController extends SuperController {
 
         log.debug("dtoList = {}" , JSONObject.toJSONString(dtoList));
 
+        String text = AgentUtils.getText(dtoList)  ;
+        long roleId = AgentUtils.getRoleId(dtoList) ;
+        String preBusinessId = AgentUtils.getPreBusinessId(dtoList)  ;
+        String businessId = IdUtil.getSnowflakeNextIdStr(); // 生成一个唯一的业务ID
+
         // 提交任务给处理服务，让它后台执行处理
-        taskService.addTask(channelId , IdUtil.getSnowflakeNextIdStr());
+        taskService.addTask(channelId , businessId , roleId , text , preBusinessId);
 
-        // 完成之后发送消息给前端
-        ChatMessageDto personDto = new ChatMessageDto() ;
-
-        personDto.setChatText("收到，罗小东的任务我已经在处理，请稍等1-2分钟 :-)");
-        personDto.setName("考核题目生成Agent");
-        personDto.setRoleType("agent");
-        personDto.setReaderType("html");
-        personDto.setBusinessId(IdUtil.getSnowflakeNextIdStr());
-        personDto.setDateTime(DateUtil.formatDateTime(new Date()));
-        personDto.setIcon("http://data.linesno.com/icons/sepcialist/dataset_23.png");
-        personDto.setDateTime(DateUtil.formatDateTime(new Date()));
+        IndustryRoleDto roleDto = smartAssistantConsumer.getRoleById(roleId)  ;
+        ChatMessageDto personDto = AgentUtils.getChatMessageDto(dtoList, roleDto , businessId , text);
 
         // 保存消息实体
         messageService.saveChatMessage(dtoList , personDto , channelId) ;
-
         return AjaxResult.success(personDto) ;
     }
+
 
     /**
      * 获取到消息信息
@@ -117,7 +114,7 @@ public class ImChatController extends SuperController {
             ta = JSONObject.parseObject(resultData, TaskContentDto.class);
         }
 
-        smartAssistantConsumer.runChainAgent(ta , roleId) ;
+//        smartAssistantConsumer.runChainAgent(ta , roleId) ;
 
         return ok() ;
     }

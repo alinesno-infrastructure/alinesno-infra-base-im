@@ -22,12 +22,12 @@
             {{ item.name }}  <span style="margin-left:10px" :class="item.showTools?'show-tools':'hide-tools'"> {{ item.dateTime }} </span>
           </div>
 
-          <div class="say-message-body markdown-body" v-html="readerHtml(item.chatText)"></div>
+          <div class="say-message-body markdown-body" :style="item.roleType == 'person' ? 'text-align:right' : ''" v-html="readerHtml(item.chatText)"></div>
 
             <div class="chat-ai-say-tools" style="margin-top: 3px;width: 100%;text-align: right;" :class="item.showTools?'show-tools':'hide-tools'">
                 <el-button type="danger" link icon="Promotion" size="small" @click="handleBusinessIdToMessageBox(item)">选择</el-button>
                 <el-button type="primary" link icon="EditPen" size="small" @click="handleEditGenContent(item)">编辑</el-button>
-                <el-button type="primary" link icon="Refresh" size="small" @click="handleRecyleGenContent(item)">重新生成</el-button>
+                <!-- <el-button type="primary" link icon="Refresh" size="small" @click="handleRecyleGenContent(item)">重新生成</el-button> -->
             </div>
 
         </div>
@@ -41,6 +41,8 @@
 <script setup>
 
 import { getParam } from '@/utils/ruoyi'
+
+import { nextTick } from 'vue'
 
 import { computed, ref , onMounted,  defineEmits} from 'vue';
 import MarkdownIt from 'markdown-it';
@@ -87,6 +89,7 @@ const pushMessageList = (mess) => {
 // 推送消息到当前面板
 const currentResponseMessageList = (message) => {
   messageList.value = message ; 
+
   initChatBoxScroll();
 }
 
@@ -102,12 +105,13 @@ const handleRecyleGenContent = (item) => {
 
 function initChatBoxScroll() {
 
-  const element = innerRef.value;  // 获取滚动元素
-  const scrollHeight = element.scrollHeight;
+  nextTick(() => {
+    const element = innerRef.value;  // 获取滚动元素
+    const scrollHeight = element.scrollHeight;
 
-  // TODO 待处理滚动条没有到底部的问题
-  console.log('scrollHeight = ' + scrollHeight);
-  scrollbarRef.value.setScrollTop(scrollHeight) ; //scrollHeight);
+    scrollbarRef.value.setScrollTop(scrollHeight) ; 
+  })
+
 }
 
 const mdi = new MarkdownIt({
@@ -230,8 +234,8 @@ defineExpose({
     .say-message-body {
       padding: 10px;
       line-height: 1.4rem;
-      background: #fafafa;
       border-radius: 3px;
+      background: #fafafa;
     }
 
   }
