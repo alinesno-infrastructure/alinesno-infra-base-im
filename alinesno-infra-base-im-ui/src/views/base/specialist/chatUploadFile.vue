@@ -5,7 +5,7 @@
          <el-upload
             ref="uploadRef"
             :limit="1"
-            accept=".xlsx, .xls, .doc, .docx"
+            accept=".xlsx, .xls, .pdf, .md , .txt, .doc, .docx"
             :headers="upload.headers"
             :action="upload.url + '?channelId=' + upload.channelId"
             :disabled="upload.isUploading"
@@ -65,7 +65,7 @@ const upload = reactive({
   // 设置上传的请求头部
   headers: { Authorization: "Bearer " + getToken() },
   // 上传的地址
-  url: import.meta.env.VITE_APP_BASE_API + "/v1/api/infra/base/im/knowledge//importData"
+  url: import.meta.env.VITE_APP_BASE_API + "/v1/api/infra/base/im/knowledge/importData"
 });
 
 function handleOpenUpload(val){

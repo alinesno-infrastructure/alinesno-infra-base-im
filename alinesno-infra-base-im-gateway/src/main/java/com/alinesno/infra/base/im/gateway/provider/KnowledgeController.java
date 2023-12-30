@@ -3,11 +3,13 @@ package com.alinesno.infra.base.im.gateway.provider;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
+import com.alinesno.infra.base.im.adapter.BaseSearchController;
 import com.alinesno.infra.base.im.dto.ChatMessageDto;
 import com.alinesno.infra.base.im.service.IMessageService;
 import com.alinesno.infra.base.im.service.ITaskService;
 import com.alinesno.infra.common.facade.response.AjaxResult;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.Date;
 
 /**
@@ -23,8 +26,11 @@ import java.util.Date;
  */
 @Slf4j
 @RestController
-@RequestMapping(value = "/v1/api/infra/base/im/knowledge/")
+@RequestMapping(value = "/v1/api/infra/base/im/knowledge")
 public class KnowledgeController {
+
+    @Autowired
+    private BaseSearchController searchController ;
 
     @Autowired
     private ITaskService taskService ;
@@ -35,7 +41,7 @@ public class KnowledgeController {
     /**
      * 导入数据
      *
-     * @param file          导入文件
+     * @param file 导入文件
      */
     @PostMapping(value = "/importData", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public AjaxResult importData(@RequestPart("file") MultipartFile file, Long channelId) throws Exception {
@@ -54,6 +60,23 @@ public class KnowledgeController {
         personDto.setDateTime(DateUtil.formatDateTime(new Date()));
         personDto.setIcon("https://foruda.gitee.com/avatar/1676897721015308137/41655_landonniao_1656075872.png");
         personDto.setDateTime(DateUtil.formatDateTime(new Date()));
+
+        // 上传到知识库角色
+        String datasetId = "1735980565715537922" ;
+        File tmpFile = new File("/tmp/" + file.getOriginalFilename()) ;
+        file.transferTo(tmpFile);
+
+        AjaxResult result = searchController.datasetUpload(tmpFile.getAbsolutePath() , datasetId , progress -> {
+            log.debug("total bytes: " + progress.getTotalBytes());   // 文件大小
+            log.debug("current bytes: " + progress.getCurrentBytes());   // 已上传字节数
+            log.debug("progress: " + Math.round(progress.getRate() * 100) + "%");  // 已上传百分比
+            if (progress.isDone()) {   // 是否上传完成
+                log.debug("--------   Upload Completed!   --------");
+            }
+        }) ;
+
+        log.debug("upload file result = {}" , result);
+        FileUtils.forceDelete(tmpFile);
 
         // 保存消息实体
         messageService.saveChatMessage(personDto , channelId) ;
