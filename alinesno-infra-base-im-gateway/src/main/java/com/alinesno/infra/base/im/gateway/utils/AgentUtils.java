@@ -38,7 +38,7 @@ public class AgentUtils {
      * @param text
      * @return
      */
-    public static ChatMessageDto getChatMessageDto(List<WebMessageDto> dtoList, IndustryRoleDto roleDto , String businessId , String text) {
+    public static ChatMessageDto getChatMessageDto(List<WebMessageDto> dtoList, IndustryRoleDto roleDto , long businessId , String text) {
 
         // 发送消息给前端
         ChatMessageDto personDto = new ChatMessageDto() ;

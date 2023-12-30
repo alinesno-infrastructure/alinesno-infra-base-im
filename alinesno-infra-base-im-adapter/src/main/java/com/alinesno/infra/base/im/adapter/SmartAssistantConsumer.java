@@ -36,7 +36,7 @@ public interface SmartAssistantConsumer {
      * @param businessId
      */
     @Post("/api/infra/smart/assistant/message/queryMessage")
-    AjaxResult queryContent(@Query("businessId") String businessId);
+    AjaxResult queryContent(@Query("businessId") long businessId);
 
     /**
      * 发送第三方IM消息

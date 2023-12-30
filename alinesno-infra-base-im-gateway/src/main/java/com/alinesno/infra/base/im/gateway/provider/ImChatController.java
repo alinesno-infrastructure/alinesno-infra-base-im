@@ -49,7 +49,7 @@ public class ImChatController extends SuperController {
      * @return
      */
     @GetMapping("/chatAssistantContent")
-    public AjaxResult chatAssistantContent(String businessId){
+    public AjaxResult chatAssistantContent(long businessId){
 
         AjaxResult result = smartAssistantConsumer.queryContent(businessId) ; //  smartBrainConsumer.chatContent(businessId) ;
         log.debug("chatContent result = {}" , result);
@@ -62,14 +62,14 @@ public class ImChatController extends SuperController {
      * @return
      */
     @PostMapping("/sendUserMessage")
-    public AjaxResult sendUserMessage(@RequestBody List<WebMessageDto> dtoList , Long channelId){
+    public AjaxResult sendUserMessage(@RequestBody List<WebMessageDto> dtoList , long channelId){
 
         log.debug("dtoList = {}" , JSONObject.toJSONString(dtoList));
 
         String text = AgentUtils.getText(dtoList)  ;
         long roleId = AgentUtils.getRoleId(dtoList) ;
         String preBusinessId = AgentUtils.getPreBusinessId(dtoList)  ;
-        String businessId = IdUtil.getSnowflakeNextIdStr(); // 生成一个唯一的业务ID
+        long businessId = IdUtil.getSnowflakeNextId(); // 生成一个唯一的业务ID
 
         // 提交任务给处理服务，让它后台执行处理
         taskService.addTask(channelId , businessId , roleId , text , preBusinessId);
@@ -149,7 +149,7 @@ public class ImChatController extends SuperController {
             agentInfo.setName("Agent小助理");
             agentInfo.setRoleType("agent");
             agentInfo.setReaderType("html");
-            agentInfo.setBusinessId(IdUtil.getSnowflakeNextIdStr());
+            agentInfo.setBusinessId(IdUtil.getSnowflakeNextId());
             agentInfo.setDateTime(DateUtil.formatDateTime(new Date()));
             agentInfo.setIcon("http://data.linesno.com/icons/sepcialist/dataset_23.png");
             agentInfo.setDateTime(DateUtil.formatDateTime(new Date()));

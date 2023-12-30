@@ -22,7 +22,7 @@ import java.util.*;
 @Service
 public class TaskServiceImpl implements ITaskService {
 
-    private static final Map<String , Long> taskBox = new HashMap<>() ;
+    private static final Map<Long , Long> taskBox = new HashMap<>() ;
 
     @Autowired
     private IMessageService messageService ;
@@ -31,7 +31,7 @@ public class TaskServiceImpl implements ITaskService {
     private SmartAssistantConsumer assistantConsumer ;
 
     @Override
-    public void addTask(long channelId, String businessId , long roleId, String text, String preBusinessId) {
+    public void addTask(long channelId, long businessId , long roleId, String text, String preBusinessId) {
         log.debug("添加任务实例:messageId = {} , businessId = {}" , channelId , businessId);
 
         taskBox.put(businessId , channelId) ;
@@ -40,7 +40,7 @@ public class TaskServiceImpl implements ITaskService {
         String assistantContent = null ;
 
         if(StringUtils.isNotBlank(preBusinessId)){
-            AjaxResult result = assistantConsumer.queryContent(preBusinessId) ;
+            AjaxResult result = assistantConsumer.queryContent(Long.parseLong(preBusinessId)) ;
             MessageQueueDto messageQueueDto = JSONObject.parseObject(result.get("data")+"" , MessageQueueDto.class) ;
 
             assistantContent = messageQueueDto.getAssistantContent() ;
@@ -70,11 +70,11 @@ public class TaskServiceImpl implements ITaskService {
 
         if(!taskBox.isEmpty()){
 
-            Iterator<Map.Entry<String, Long>> iterator = taskBox.entrySet().iterator();
+            Iterator<Map.Entry<Long, Long>> iterator = taskBox.entrySet().iterator();
             while (iterator.hasNext()) {
-                Map.Entry<String, Long> entry = iterator.next();
+                Map.Entry<Long, Long> entry = iterator.next();
 
-                String businessId = entry.getKey() ;
+                long businessId = entry.getKey() ;
                 Long channelId = entry.getValue() ;
 
                 AjaxResult result = assistantConsumer.queryContent(businessId) ;

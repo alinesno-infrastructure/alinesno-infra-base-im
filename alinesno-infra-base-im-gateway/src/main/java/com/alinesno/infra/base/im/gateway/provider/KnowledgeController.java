@@ -56,7 +56,7 @@ public class KnowledgeController {
         personDto.setName("考核题目生成Agent");
         personDto.setRoleType("person");
         personDto.setReaderType("html");
-        personDto.setBusinessId(IdUtil.getSnowflakeNextIdStr());
+        personDto.setBusinessId(IdUtil.getSnowflakeNextId());
         personDto.setDateTime(DateUtil.formatDateTime(new Date()));
         personDto.setIcon("https://foruda.gitee.com/avatar/1676897721015308137/41655_landonniao_1656075872.png");
         personDto.setDateTime(DateUtil.formatDateTime(new Date()));

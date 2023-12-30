@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class AssistantPromptDto {
 
-    private String businessId;
+    private Long businessId;
     private long agentId;
     private String content;
     private long channelId ;
