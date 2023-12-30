@@ -16,17 +16,22 @@
 
         <div class="chat-ai-say-body" :class="item.roleType == 'person' ? 'say-right-window' : ''" style="max-width:calc(100% - 135px)">
           <div class="say-message-info" v-if="item.roleType == 'person'"> 
-            <span style="margin-left:10px" :class="item.showTools?'show-tools':'hide-tools'"> {{ item.dateTime }}</span> {{ item.name }} 
+            <span style="margin-left:10px" :class="item.showTools?'show-tools':'hide-tools'"> {{ item.dateTime }}</span> 
+            {{ item.name }} 
           </div>
           <div class="say-message-info" v-else> 
-            {{ item.name }}  <span style="margin-left:10px" :class="item.showTools?'show-tools':'hide-tools'"> {{ item.dateTime }} </span>
+
+            <div v-if="item.roleType != 'person'" style="float:left;text-align: right;">
+              <el-button v-if="index%2==0" type="primary" link loading size="default"></el-button>
+              <el-button v-if="index%2==1" type="primary" link size="default"><el-icon><CircleCheck /></el-icon></el-button>
+            </div>
+
+            {{ item.name }}  
+            <span style="margin-left:10px" :class="item.showTools?'show-tools':'hide-tools'"> {{ item.dateTime }} </span>
           </div>
 
           <div class="say-message-body markdown-body" :style="item.roleType == 'person' ? 'text-align:right' : ''" v-html="readerHtml(item.chatText)"></div>
 
-          <div v-if="item.roleType != 'person'" style="margin-top: 3px;float:left;text-align: right;">
-            <el-button type="primary" link loading size="small">Loading</el-button>
-          </div>
 
           <div class="chat-ai-say-tools" style="margin-top: 3px;;text-align: right;float:right" :class="item.showTools?'show-tools':'hide-tools'">
               <el-button type="danger" link icon="Promotion" size="small" @click="handleBusinessIdToMessageBox(item)">选择</el-button>
