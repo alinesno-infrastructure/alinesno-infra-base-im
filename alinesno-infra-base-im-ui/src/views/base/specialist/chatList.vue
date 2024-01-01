@@ -156,7 +156,8 @@ function handleBusinessIdToMessageBox(item){
 
 /** 编辑生成内容和更新生成内容 */
 function handleEditGenContent(item){
-  const businessId = item.businessId + ' ' ;
+  const businessId = item.businessId + '' ;
+  console.log('businessId = ' + businessId) ;
   emit('handleEditorContent' , businessId) ; 
 }
 
