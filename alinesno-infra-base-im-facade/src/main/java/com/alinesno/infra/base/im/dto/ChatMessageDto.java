@@ -1,5 +1,7 @@
 package com.alinesno.infra.base.im.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 /**
@@ -18,6 +20,8 @@ public class ChatMessageDto {
     private String readerType ; // 读取方式和类型
 
     private boolean isLoading = false ; // 是否还在加载中
+
+    @JsonSerialize(using = ToStringSerializer.class)
     private long businessId ; // 生成的唯一业务ID标识
 
 }
