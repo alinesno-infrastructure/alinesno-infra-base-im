@@ -17,14 +17,14 @@
 
         <el-table v-loading="loading" :data="UserList" @selection-change="handleSelectionChange">
           <el-table-column type="index" width="40" align="center"/>
-          <el-table-column label="图标" align="center" width="60px" prop="icon" v-if="columns[0].visible">
+          <el-table-column label="图标" align="center" width="50px" prop="icon" v-if="columns[0].visible">
             <template #default="scope">
               <div class="role-icon">
                 <img :src="'http://data.linesno.com/icons/circle/Delivery boy-' + ((scope.$index + 1)%5 + 1) + '.png'" />
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="角色名称" align="left" width="180" key="roleName" prop="roleName" v-if="columns[1].visible" :show-overflow-tooltip="true">
+          <el-table-column label="角色名称" align="left" key="roleName" prop="roleName" v-if="columns[1].visible" :show-overflow-tooltip="true">
             <template #default="scope">
               <div style="font-size: 15px;font-weight: 500;color: #3b5998;">
                 {{ scope.row.roleName }}
@@ -39,9 +39,9 @@
               <div>
                 {{ scope.row.responsibilities }}
               </div>
-              <div style="font-size: 13px;color: #a5a5a5;">
+              <!-- <div style="font-size: 13px;color: #a5a5a5;">
                 会话次数: 12734 稳定率:98%
-              </div>
+              </div> -->
             </template>
           </el-table-column>
           <el-table-column label="所属团队" align="center" width="150" key="responsibilities" prop="responsibilities" v-if="columns[2].visible" :show-overflow-tooltip="true">
@@ -51,9 +51,9 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="执行任务" align="center" width="110"  key="storagePath" prop="storagePath" v-if="columns[5].visible" :show-overflow-tooltip="true">
+          <el-table-column label="添加Agent" align="center" width="110"  key="storagePath" prop="storagePath" v-if="columns[5].visible" :show-overflow-tooltip="true">
             <template #default="scope">
-              <el-button type="primary" text bg icon="Position" :loading="runChainAgentLoadding" @click="handleChainAgent(scope.row)">执行</el-button>
+              <el-button type="primary" text bg icon="Position" :loading="runChainAgentLoadding" @click="handleChainAgent(scope.row)">选择</el-button>
             </template>
           </el-table-column>
 
@@ -81,12 +81,13 @@ import {
   addUser,
   getUserChainByChainId,
   saveUserChainInfo,
+  addChainAgent ,
   runUserChainByUserId,
 } from "@/api/base/im/user";
 
-import {
-  runChainAgent
-} from '@/api/base/im/robot'
+// import {
+//   addChainAgent 
+// } from '@/api/base/im/robot'
 
 import {
   addUserChain , 
@@ -96,7 +97,7 @@ import {
 import {reactive} from "vue";
 
 const props = defineProps({
-  businessId: {
+  channelId: {
     type: [Number, String]
   }
 });
@@ -212,10 +213,10 @@ function handleLangChain(row){
 /** 执行下一个节点机器人 */
 function handleChainAgent(row){
   const roleId = row.id ; 
-  const businessId = props.businessId ; 
+  const channelId = props.channelId ; 
 
-  runChainAgent(roleId , businessId).then(response => {
-    proxy.$modal.msgSuccess("运行成功，请注意查收钉钉消息.");
+  addChainAgent(roleId , channelId).then(response => {
+    proxy.$modal.msgSuccess("添加成功.");
   })
 
 }
@@ -233,8 +234,8 @@ getList();
 <style lang="scss" scoped>
 .role-icon {
   img {
-    width:40px;
-    height:40px;
+    width:35px;
+    height:35px;
   }
 }
 </style>

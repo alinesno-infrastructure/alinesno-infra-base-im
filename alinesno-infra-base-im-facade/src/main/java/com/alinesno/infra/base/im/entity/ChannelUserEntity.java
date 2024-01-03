@@ -21,4 +21,7 @@ public class ChannelUserEntity extends InfraBaseEntity {
     @Column(type = MySqlTypeConstant.BIGINT, length = 11, isNull = false, comment = "频道ID")
     private Long channelId ;
 
+    @Column(type = MySqlTypeConstant.VARCHAR, length = 6, isNull = false, comment = "类型(agent代理|user用户)")
+    private String accountType ; // 类型(agent代理|user用户)
+
 }

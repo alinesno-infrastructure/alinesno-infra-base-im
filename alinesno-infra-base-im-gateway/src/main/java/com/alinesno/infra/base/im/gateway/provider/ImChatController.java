@@ -172,6 +172,17 @@ public class ImChatController extends SuperController {
         return AjaxResult.success(userEntities) ;
     }
 
+
+    /**
+     * 获取所有频道列表
+     * @return
+     */
+    @GetMapping("/getAllCatalog")
+    public AjaxResult getAllCatalog(){
+        return smartAssistantConsumer.allCatalog() ;
+    }
+
+
     /**
      * 发送消息给钉钉
      * @return

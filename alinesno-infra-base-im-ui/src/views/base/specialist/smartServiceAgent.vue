@@ -10,7 +10,7 @@
               <img style="width:30px;height:30px;border-radius: 5px;position: absolute;" :src="'http://data.linesno.com/icons/sepcialist/dataset_' + (index + 40) + '.png'" />
               <div style="margin-left: 40px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;margin-top: -2px;color: #2c3e50;">
                 {{ item.roleName }}
-                <el-button type="primary" style="float:right" icon="Link" text bg @click="handleSelectAgentToChat(item)" >选择</el-button>
+                <el-button type="primary" style="float:right;position: absolute;right:25px" icon="Link" text bg @click="handleSelectAgentToChat(item)" >选择</el-button>
               </div>
             </li>
             <li class="item-process" style="background-color: #fff;text-align: center;">
@@ -21,10 +21,10 @@
       </div>
     </div>
 
-    <el-dialog v-model="dialogVisible" title="选择专家服务Agent" width="60%" :before-close="handleClose" append-to-body>
+    <el-dialog v-model="dialogVisible" v-if="dialogVisible" title="选择专家服务Agent" width="60%" :before-close="handleClose" append-to-body>
 
       <!-- 打开角色管理 -->
-      <RoleAgent :businessId="businessId" />
+      <RoleAgent :channelId="currentChannelId" />
 
       <template #footer>
         <span class="dialog-footer">
@@ -43,19 +43,23 @@ import RoleAgent from './agent/roleAgent'
 import {
   getChannelAgent
 } from '@/api/base/im/robot'
+import { getParam } from '@/utils/ruoyi'
 
 // 定义派发事件
 const emit = defineEmits(['mentionUser'])
 
 const router = useRouter();
 const dialogVisible = ref(false)
-const favouriteList = ref([
-  { id: '1', icon: 'fa-solid fa-truck-fast', roleName: '技术指导Agent' },
-])
+const favouriteList = ref([])
+const currentChannelId= ref([])
 
 /** 获取到基础信息 */
 function handleGetChannelAgent(){
-  getChannelAgent(null).then(response => {
+
+  const channelId = getParam("channel");
+  currentChannelId.value = channelId ;
+
+  getChannelAgent(channelId).then(response => {
     favouriteList.value = response.data ;
   })
 }
@@ -71,8 +75,6 @@ handleGetChannelAgent() ;
 watch(() =>  router.currentRoute.value.path,
     (toPath) => {
     //要执行的方法
-    // const channelId = router.currentRoute.value.channelId;
-
     handleGetChannelAgent() ;
       
     },{immediate: true,deep: true}

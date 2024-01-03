@@ -15,11 +15,20 @@ var managerUrl = {
   removeUrl: prefix + "delete" ,
   exportUrl: prefix + "exportExcel",
   changeField: prefix + "changeField",
+  addChainAgent: prefix + "addChainAgent",
   downloadfile: prefix + "downloadfile",
   getUserChainByChainId: prefix + "getUserChainByChainId",
   saveUserChainInfo: prefix + "saveUserChainInfo",
   runUserChainByUserId: prefix + "runUserChainByUserId",
   listAllUser: prefix + "listAllUser",
+}
+
+// 添加Agent到当前的频道中 
+export function addChainAgent(roleId , channelId) {
+  return request({
+    url: managerUrl.addChainAgent+ '?channelId=' + parseStrEmpty(channelId) + '&roleId=' + parseStrEmpty(roleId),
+    method: 'get'
+  })
 }
 
 // 新增应用

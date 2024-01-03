@@ -12,12 +12,22 @@ var managerUrl = {
   sendUserMessage: prefix +"sendUserMessage" ,
   getTaskNotice : prefix +"getTaskNotice " ,
   getChannelAgent: prefix +"getChannelAgent" ,
+  getAllCatalog: prefix +"getAllCatalog" ,
 }
+
+// 获取任务实例完成通知
+export function getAllCatalog(){
+  return request({
+    url: managerUrl.getAllCatalog , 
+    method: 'get'
+  })
+}
+
 
 // 获取任务实例完成通知
 export function getChannelAgent(channelId){
   return request({
-    url: managerUrl.getChannelAgent + "?channelid=" + channelId, 
+    url: managerUrl.getChannelAgent + "?channelId=" + parseStrEmpty(channelId), 
     method: 'get'
   })
 }
@@ -57,6 +67,14 @@ export function updateAssistantContent(businessId , content) {
 export function runChainAgent(roleId , businessId) {
   return request({
     url: managerUrl.runChainAgent+ '?businessId=' + parseStrEmpty(businessId) + '&roleId=' + parseStrEmpty(roleId),
+    method: 'get'
+  })
+}
+
+// 添加Agent到当前的频道中 
+export function addChainAgent(roleId , channelId) {
+  return request({
+    url: managerUrl.addChainAgent+ '?channelId=' + parseStrEmpty(channelId) + '&roleId=' + parseStrEmpty(roleId),
     method: 'get'
   })
 }

@@ -1,9 +1,10 @@
 package com.alinesno.infra.base.im.gateway.controller;
 
-import cn.hutool.core.util.IdUtil;
+import com.alibaba.fastjson.JSONArray;
+import com.alinesno.infra.base.im.adapter.SmartAssistantConsumer;
 import com.alinesno.infra.base.im.dto.IndustryRoleDto;
+import com.alinesno.infra.base.im.entity.ChannelUserEntity;
 import com.alinesno.infra.base.im.entity.UserEntity;
-import com.alinesno.infra.base.im.enums.AccountType;
 import com.alinesno.infra.base.im.service.IChannelUserService;
 import com.alinesno.infra.base.im.service.IUserService;
 import com.alinesno.infra.common.core.constants.SpringInstanceScope;
@@ -11,15 +12,16 @@ import com.alinesno.infra.common.facade.pageable.DatatablesPageBean;
 import com.alinesno.infra.common.facade.pageable.TableDataInfo;
 import com.alinesno.infra.common.facade.response.AjaxResult;
 import com.alinesno.infra.common.web.adapter.rest.BaseController;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.ui.Model;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,6 +43,9 @@ public class UserController extends BaseController<UserEntity, IUserService> {
     @Autowired
     private IChannelUserService channelUserService ;
 
+    @Autowired
+    private SmartAssistantConsumer smartAssistantConsumer ;
+
     /**
      * 获取BusinessLogEntity的DataTables数据。
      *
@@ -53,7 +58,42 @@ public class UserController extends BaseController<UserEntity, IUserService> {
     @PostMapping("/datatables")
     public TableDataInfo datatables(HttpServletRequest request, Model model, DatatablesPageBean page) {
         log.debug("page = {}", ToStringBuilder.reflectionToString(page));
-        return this.toPage(model, this.getFeign(), page);
+
+        TableDataInfo tableDataInfo = this.toPage(model, this.getFeign(), page);
+
+        AjaxResult result = smartAssistantConsumer.getAgentList() ;
+        List<IndustryRoleDto> list = JSONArray.parseArray(result.get("data")+"" , IndustryRoleDto.class);
+        tableDataInfo.setRows(list);
+
+        return tableDataInfo ;
+    }
+
+    /**
+     * 添加用户到当前的频道当中
+     * @return
+     */
+    @GetMapping("/addChainAgent")
+    public AjaxResult addChainAgent(Long channelId , Long roleId){
+
+        Assert.notNull(channelId , "频道为空");
+        Assert.notNull(roleId, "角色为空");
+
+        LambdaQueryWrapper<ChannelUserEntity> wrapper = new LambdaQueryWrapper<>() ;
+        wrapper.eq(ChannelUserEntity::getChannelId , channelId)
+                .eq(ChannelUserEntity::getAccountType, roleId) ;
+
+        long count = channelUserService.count(wrapper) ;
+        Assert.isTrue(count == 0 , "角色已经在频道里面");
+
+        ChannelUserEntity channelUser = new ChannelUserEntity() ;
+
+        channelUser.setAccountType("agent");
+        channelUser.setChannelId(channelId);
+        channelUser.setAccountId(roleId);
+
+        channelUserService.save(channelUser) ;
+
+        return AjaxResult.success() ;
     }
 
     /**
