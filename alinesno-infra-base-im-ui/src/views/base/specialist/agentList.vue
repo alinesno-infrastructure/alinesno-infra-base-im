@@ -33,11 +33,11 @@
                 <div class="section-body">
                     <div class="app-item border-bottom" v-for="(item, i) in type.agents" :key="i">
                         <div class="app-item__icon wk wk-icon-user">
-                          <img :src="'http://data.linesno.com/icons/sepcialist/dataset_' + (i+1 + (index+1) * 5)+ '.png'" style="width:45px;height:45px;border-radius: 5px" />
+                          <img :src="'http://data.linesno.com/icons/sepcialist/dataset_' + (i+1 + (index+1) * 1)+ '.png'" style="width:45px;height:45px;border-radius: 5px" />
                         </div>
                         <div class="content">
                             <h3 class="app-item__title">
-                                {{ item.name }}
+                                {{ item.roleName }}
                                 <a class="cf-service-nav-item-label" style="margin-left:10px"
                                     @click="saveCollectProduct(item)" :title="item.name">
                                     <el-button type="text" size="medium"><i class="fa-regular fa-star"></i> 收藏</el-button>
