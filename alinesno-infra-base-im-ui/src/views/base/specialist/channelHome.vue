@@ -24,7 +24,7 @@
 <style lang="scss" scoped>
 
 .channel-panel-header{
-  margin: 10px;
+  padding: 10px;
 }
 
 .channel-panel-body{
