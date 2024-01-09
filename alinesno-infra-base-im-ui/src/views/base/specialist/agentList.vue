@@ -48,11 +48,13 @@
                                 业务基础服务规划和建设，描述待补充
                             </div>
                         </div>
+                        <!--
                         <div class="app-item__control">
                             <a class="cf-service-nav-item-label" @click="openService(item)" :title="item.name">
                                 <el-button type="text" size="medium" icon="el-icon-link">集成Agent</el-button>
                             </a>
                         </div>
+                        -->
                     </div>
                 </div>
             </section>
