@@ -3,7 +3,7 @@
   <div class="acp-dashboard" style="padding: 0px 10px !important">
     <div class="smart-container">
       <el-row>
-        <el-col :span="18">
+        <el-col :span="17">
           <div class="robot-chat-windows">
             <div class="robot-chat-header">
               <div class="chat-header-title" style="padding-left: 28px;">
@@ -72,7 +72,7 @@
           </div>
         </el-col>
 
-        <el-col :span="6">
+        <el-col :span="7">
           <SmartServiceAgent @mentionUser="mentionUser" />
         </el-col>
        
