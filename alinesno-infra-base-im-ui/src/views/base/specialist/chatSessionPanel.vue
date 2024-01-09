@@ -84,7 +84,7 @@ function handleSelectChatChannel(item) {
 
   const channelId = item.id ;
   router.push({
-      path: '/index',
+      path: '/chat',
       query: { 'channel': channelId }
   })
 

@@ -100,7 +100,7 @@ function handleSetChannelId(channelId){
 
   joinChannel(channelId).then(response => {
     router.push({
-        path: '/index',
+        path: '/chat',
         query: { 'channel': channelId }
     })
   })

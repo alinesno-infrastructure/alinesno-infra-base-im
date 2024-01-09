@@ -159,7 +159,7 @@ const reset = () => {
 /** 设置ChannelId */
 function handleSetChannelId(channelId){
   router.push({
-      path: '/index',
+      path: '/chat',
       query: { 'channel': channelId }
   })
   // window.location.reload();

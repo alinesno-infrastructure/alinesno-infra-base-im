@@ -55,9 +55,15 @@ export const constantRoutes = [
     children: [
       {
         path: '/index',
-        component: () => import('@/views/base/specialist/index'),
+        component: () => import('@/views/base/specialist/channelHome'),
         name: '/index',
         meta: { title: '首页', icon: 'dashboard', affix: true }
+      },
+      {
+        path: '/chat',
+        component: () => import('@/views/base/specialist/index'),
+        name: '/chat',
+        meta: { title: '聊天', icon: 'dashboard', affix: true }
       },
       {
         path: '/dashboard/smartService',

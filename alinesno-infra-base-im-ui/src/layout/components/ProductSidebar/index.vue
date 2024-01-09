@@ -3,7 +3,7 @@
     <el-menu default-active="1" class="el-menu-vertical" :collapse="isCollapse" @open="handleOpen" @close="handleClose">
       <el-menu-item index="1" @click="jumpTo">
         <i class="fa-solid fa-desktop"></i>
-      </el-menu-item>
+      </el-menu-item> 
 
       <el-tooltip effect="dark" :content="item.desc" v-for="item in menuItems" :key="item.id" placement="right">
         <el-menu-item :index="item.id" @click="openServiceList(item.link)">
@@ -50,10 +50,9 @@ const router = useRouter();
 
 // 菜单列表
 const menuItems = ref([
-  { id: '3', icon: 'fa-solid fa-masks-theater', link: '/agentList', desc: '角色列表' },
-  // { id: '2', icon: 'fa-solid fa-feather', link: '/discover', desc: '发现频道' },
-  // {id:'5' , icon:'fa-brands fa-wordpress' , link:'/brain/task/index' , desc:'生成任务'},
+  {id:'5' , icon:'fa-brands fa-wordpress' , link:'/chat' , desc:'聊天信息'},
   // {id:'8' , icon:'fa-solid fa-file-pdf' , link:'/brain/loaderData/index' , desc:'知识库管理'},
+  { id: '3', icon: 'fa-solid fa-masks-theater', link: '/agentList', desc: '角色列表' },
   // {id:'4' , icon:'fa-brands fa-skype' , link:'/brain/catalog/index' , desc:'业务分类'},
   // {id:'7' , icon:'fa-solid fa-chart-simple' , link:'/brain/record/index' , desc:'请求记录'},
 ]);

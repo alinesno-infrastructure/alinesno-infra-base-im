@@ -4,11 +4,11 @@
   <div class="container-main" style="padding-bottom:50px;background-color: #fff;">
       <div class="tpl-app app-main-content" v-loading="fullscreenLoading" style="max-width: 1240px;">
 
-            <!-- <div class="header">
+            <!-- 
+            <div class="header">
                 自动化Agent列表
                 <span style="font-size: 13px;color: #a5a5a5;">这里包含所有需要运营的Agent服务列表，你可以理解成一个Agent就是一个员工</span>
             </div>
-
             <div class="popular">
                 <div class="popular-item" 
                     v-for="(item , index) in productList"
@@ -24,7 +24,8 @@
                         Agent是集成自动化能力的基础服务模块建设能力
                     </div>
                 </div>
-            </div> -->
+            </div>  
+            -->
 
             <section class="section" v-for="(type, index) in productList" :key="index">
                 <h2 class="section-title">
@@ -152,6 +153,7 @@ handleGetProductList() ;
       .section-title {
           margin-left: -20px;
           font-size: 20px;
+          margin-bottom: 0px;
       }
 
       .section-body {
