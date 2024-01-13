@@ -311,7 +311,8 @@ function handleChatMessage(channelId) {
 function handleEditorContent(bId){
   editDialogVisible.value = true ; 
 
-  console.log('bId = ' + businessId) ;
+  console.log('bId = ' + bId) ;
+  businessId.value = bId ;
 
   chatAssistantContent(bId).then(response => {
     currentTaskContent.value = response.data.assistantContent; 

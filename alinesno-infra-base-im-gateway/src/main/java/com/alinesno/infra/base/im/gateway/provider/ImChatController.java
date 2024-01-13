@@ -90,7 +90,7 @@ public class ImChatController extends SuperController {
     @PostMapping("/updateAssistantContent")
     public AjaxResult updateAssistantContent(@RequestBody TaskContentDto dto){
 
-        AjaxResult result = smartBrainConsumer.modifyContent(dto) ;
+        AjaxResult result = smartAssistantConsumer.modifyContent(dto) ? ok():error() ;
         log.debug("chatContent result = {}" , result);
 
         return result ;

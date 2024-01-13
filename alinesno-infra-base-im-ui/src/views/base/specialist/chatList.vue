@@ -35,8 +35,8 @@
 
           <div class="chat-ai-say-tools" style="margin-top: 3px;;text-align: right;float:right" :class="item.showTools?'show-tools':'hide-tools'">
               <el-button type="danger" link icon="Promotion" size="small" @click="handleBusinessIdToMessageBox(item)">选择</el-button>
-              <el-button type="primary" link icon="EditPen" size="small" @click="handleEditGenContent(item)">编辑</el-button>
-              <el-button type="primary" link icon="Refresh" size="small" @click="handleRecyleGenContent(item)">重新生成</el-button>
+              <el-button type="primary" link icon="EditPen" size="small" @click="handleEditGenContent(item)">查看</el-button>
+              <!-- <el-button type="primary" link icon="Refresh" size="small" @click="handleRecyleGenContent(item)">重新生成</el-button> -->
           </div>
 
         </div>

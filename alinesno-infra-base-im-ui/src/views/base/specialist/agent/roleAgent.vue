@@ -26,7 +26,7 @@
           </el-table-column>
           <el-table-column label="角色名称" align="left" key="roleName" prop="roleName" v-if="columns[1].visible" :show-overflow-tooltip="true">
             <template #default="scope">
-              <div style="font-size: 15px;font-weight: 500;color: #3b5998;">
+              <div style="font-size: 14px;font-weight: 500;color: #3b5998;">
                 {{ scope.row.roleName }}
               </div>
               <div style="font-size: 13px;color: #a5a5a5;">
@@ -234,8 +234,8 @@ getList();
 <style lang="scss" scoped>
 .role-icon {
   img {
-    width:35px;
-    height:35px;
+    width:30px;
+    height:30px;
   }
 }
 </style>

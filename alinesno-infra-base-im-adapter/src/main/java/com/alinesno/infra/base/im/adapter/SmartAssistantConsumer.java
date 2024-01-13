@@ -3,12 +3,15 @@ package com.alinesno.infra.base.im.adapter;
 import com.alinesno.infra.base.im.dto.AssistantPromptDto;
 import com.alinesno.infra.base.im.dto.IndustryRoleDto;
 import com.alinesno.infra.base.im.dto.RobotMessageDto;
+import com.alinesno.infra.base.im.dto.TaskContentDto;
+import com.alinesno.infra.common.facade.pageable.TableDataInfo;
 import com.alinesno.infra.common.facade.response.AjaxResult;
 import com.dtflys.forest.annotation.*;
 
 import java.util.List;
 
-@BaseRequest(baseURL = "#{alinesno.infra.gateway.host}/smart-assistant" , connectTimeout = 30*1000)
+//@BaseRequest(baseURL = "#{alinesno.infra.gateway.host}/smart-assistant" , connectTimeout = 30*1000)
+@BaseRequest(baseURL = "http://localhost:30304" , connectTimeout = 30*1000)
 public interface SmartAssistantConsumer {
 
     /**
@@ -20,10 +23,11 @@ public interface SmartAssistantConsumer {
 
     /**
      * 获取到Agent列表
+     *
      * @return
      */
     @Get("/api/infra/smart/assistant/agent/list")
-    AjaxResult getAgentList()  ;
+    TableDataInfo getAgentList(@Query("pageNow") int pageNow , @Query("pageSize") int pageSize , @Query("agentName") String agentName)  ;
 
     /**
      * 根据id获取到agent的列表
@@ -62,4 +66,12 @@ public interface SmartAssistantConsumer {
      * @return
      */
     AjaxResult sendMessageWebhook(@JSONBody RobotMessageDto dto, @JSONBody Object o) ;
+
+    /**
+     * 更新内容服务
+     * @param dto
+     * @return
+     */
+    @Post("/api/infra/smart/assistant/message/modifyContent")
+    boolean modifyContent(@JSONBody TaskContentDto dto);
 }

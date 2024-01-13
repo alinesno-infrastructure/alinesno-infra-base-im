@@ -45,7 +45,7 @@ public class MessageEntity extends InfraBaseEntity {
     @Column(type = MySqlTypeConstant.VARCHAR, length = 255, isNull = true, comment = "角色图标")
     private String icon ;
 
-    @Column(type = MySqlTypeConstant.VARCHAR, length = 32, isNull = true, comment = "发送人名称")
+    @Column(type = MySqlTypeConstant.LONGTEXT, isNull = true, comment = "发送人名称")
     private String name;
 
     @Column(type = MySqlTypeConstant.VARCHAR, length = 6, isNull = true, comment = "读取方式")

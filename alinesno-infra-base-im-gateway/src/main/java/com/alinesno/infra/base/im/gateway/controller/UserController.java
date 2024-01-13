@@ -1,8 +1,6 @@
 package com.alinesno.infra.base.im.gateway.controller;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alinesno.infra.base.im.adapter.SmartAssistantConsumer;
-import com.alinesno.infra.base.im.dto.IndustryRoleDto;
 import com.alinesno.infra.base.im.entity.ChannelUserEntity;
 import com.alinesno.infra.base.im.entity.UserEntity;
 import com.alinesno.infra.base.im.service.IChannelUserService;
@@ -58,14 +56,7 @@ public class UserController extends BaseController<UserEntity, IUserService> {
     @PostMapping("/datatables")
     public TableDataInfo datatables(HttpServletRequest request, Model model, DatatablesPageBean page) {
         log.debug("page = {}", ToStringBuilder.reflectionToString(page));
-
-        TableDataInfo tableDataInfo = this.toPage(model, this.getFeign(), page);
-
-        AjaxResult result = smartAssistantConsumer.getAgentList() ;
-        List<IndustryRoleDto> list = JSONArray.parseArray(result.get("data")+"" , IndustryRoleDto.class);
-        tableDataInfo.setRows(list);
-
-        return tableDataInfo ;
+        return smartAssistantConsumer.getAgentList(page.getPageNum() , page.getPageSize() , "");
     }
 
     /**

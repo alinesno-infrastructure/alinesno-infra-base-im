@@ -12,5 +12,6 @@ public class AssistantPromptDto {
     private long agentId;
     private String content;
     private long channelId ;
+    private String assistantContent ;
 
 }

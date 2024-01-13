@@ -56,6 +56,7 @@ public class TaskServiceImpl implements ITaskService {
         dto.setChannelId(channelId);
         dto.setBusinessId(businessId);
         dto.setContent(JSONObject.toJSONString(params));
+        dto.setAssistantContent(assistantContent);
 
         assistantConsumer.runChainAgent(dto) ;
     }

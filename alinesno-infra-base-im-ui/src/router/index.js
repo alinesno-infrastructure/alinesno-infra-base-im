@@ -78,6 +78,18 @@ export const constantRoutes = [
         meta: { title: '服务列表', icon: 'dashboard', affix: true }
       },
       {
+        path: '/serviceProduct',
+        component: () => import('@/views/base/specialist/serviceProduct'),
+        name: '/serviceProduct',
+        meta: { title: '服务列表', icon: 'dashboard', affix: true }
+      },
+      {
+        path: '/executeRecord',
+        component: () => import('@/views/base/specialist/executeRecord'),
+        name: '/executeRecord',
+        meta: { title: '服务列表', icon: 'dashboard', affix: true }
+      },
+      {
         path: '/dashboard/suportTechnique',
         component: () => import('@/views/suportTechnique'),
         name: '/dashboard/suportTechnique',
