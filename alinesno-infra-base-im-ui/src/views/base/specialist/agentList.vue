@@ -67,14 +67,22 @@
 
 <script setup name="ServiceList">
 
+import { ElLoading } from 'element-plus'
+
 const productList = ref([]);
-const fullscreenLoading = false;
+const fullscreenLoading = ref(false);
 import { getAllCatalog } from "@/api/base/im/robot";
 
 function handleGetProductList() {
+
+    const loading = ElLoading.service({
+        lock: true,
+        text: 'Loading',
+    })
   getAllCatalog().then(response => {
-      console.log('response = ' + response);
-      productList.value = response.data ;
+        console.log('response = ' + response);
+        productList.value = response.data ;
+        loading.close() ;
   });
 };
 
