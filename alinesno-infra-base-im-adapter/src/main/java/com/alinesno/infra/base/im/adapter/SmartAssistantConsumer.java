@@ -10,8 +10,8 @@ import com.dtflys.forest.annotation.*;
 
 import java.util.List;
 
-//@BaseRequest(baseURL = "#{alinesno.infra.gateway.host}/smart-assistant" , connectTimeout = 30*1000)
-@BaseRequest(baseURL = "http://localhost:30304" , connectTimeout = 30*1000)
+@BaseRequest(baseURL = "#{alinesno.infra.gateway.host}/smart-assistant" , connectTimeout = 30*1000)
+//@BaseRequest(baseURL = "http://localhost:30304" , connectTimeout = 30*1000)
 public interface SmartAssistantConsumer {
 
     /**
