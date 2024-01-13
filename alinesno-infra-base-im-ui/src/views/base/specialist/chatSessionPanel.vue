@@ -7,7 +7,7 @@
       <el-button type="danger" text bg icon="ChatRound" @click="createChannel">创建频道</el-button>
     </div>
 
-    <el-scrollbar style="float:left;height:calc(100vh - 200px)">
+    <el-scrollbar style="float:left;height:calc(100vh - 200px)" v-loading="loading">
       <div class="chatChannel-session" 
           @mouseover="showTools(item)"
           @mouseleave="hideTools(item)"
@@ -68,6 +68,7 @@ import { getParam } from '@/utils/ruoyi'
 import ChannelGroup from "./channelGroup";
 import ChannelGroupDiscover from "./channelGroupDiscover";
 
+const loading = ref(false)
 const router = useRouter();
 const createChildComp = ref(null);
 const addChildComp = ref(null);
@@ -115,8 +116,10 @@ function handleAllMyChannel() {
   const channelId = getParam("channel");
   currentChatChannel.value = channelId ; 
 
+  loading.value = true ; 
   allMyChannel().then(response => {
     chatChannel.value = response.data;
+    loading.value = false; 
   })
 }
 
@@ -133,15 +136,15 @@ function hideTools(item) {
 handleAllMyChannel();
 
 /** 监听路由变化 */
-watch(() =>  router.currentRoute.value.path,
-    (toPath) => {
-    //要执行的方法
-    // const channelId = router.currentRoute.value.channelId;
+// watch(() =>  router.currentRoute.value.path,
+//     (toPath) => {
+//     //要执行的方法
+//     // const channelId = router.currentRoute.value.channelId;
 
-    handleAllMyChannel();
+//     handleAllMyChannel();
       
-    },{immediate: true,deep: true}
-)
+//     },{immediate: true,deep: true}
+// )
   
 
 </script>

@@ -15,7 +15,7 @@
               </div>
             </div>
 
-            <div class="robot-chat-body">
+            <div class="robot-chat-body" v-loading="loading">
               <!-- 聊天窗口_start -->
               <ChatList ref="chatListRef" @sendMessageToChatBox="sendMessageToChatBox" @handleEditorContent="handleEditorContent" />
               <!-- 聊天窗口_end -->
@@ -136,6 +136,7 @@ const chatListRef = ref();
 const router = useRouter();
 const {proxy} = getCurrentInstance();
 
+const loading = ref(false)
 const businessId  = ref("") ;
 const editorLoading = ref(true) ;
 const editDialogVisible = ref(false)
@@ -295,13 +296,13 @@ function handleChatMessage(channelId) {
   // const channelId = getParam("channel");
 
   if(channelId){
+    loading.value = true ;
     chatMessage(channelId).then(response => {
       // messageList.value = response.data;
-      // loading.value = false;
       // initChatBoxScroll();
       const data = response.data ;
       chatListRef.value.currentResponseMessageList(data); 
-
+      loading.value = false;
     })
   }
 

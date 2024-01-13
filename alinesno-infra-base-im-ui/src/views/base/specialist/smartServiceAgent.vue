@@ -3,7 +3,7 @@
 
     <div class="robot-chat-help-panel">
       <div class="robot-chat-help-title">频道专家Agent列表</div>
-      <div class="robot-chat-help-item-list-panel">
+      <div class="robot-chat-help-item-list-panel" v-loading="loading">
         <div class="process-panel">
           <ul>
             <li class="item-process" v-for="(item, index) in favouriteList" :key="index">
@@ -49,6 +49,7 @@ import { getParam } from '@/utils/ruoyi'
 const emit = defineEmits(['mentionUser'])
 
 const router = useRouter();
+const loading = ref(false)
 const dialogVisible = ref(false)
 const favouriteList = ref([])
 const currentChannelId= ref([])
@@ -59,8 +60,11 @@ function handleGetChannelAgent(){
   const channelId = getParam("channel");
   currentChannelId.value = channelId ;
 
+  loading.value = true ; 
+
   getChannelAgent(channelId).then(response => {
     favouriteList.value = response.data ;
+    loading.value = false ; 
   })
 }
 
