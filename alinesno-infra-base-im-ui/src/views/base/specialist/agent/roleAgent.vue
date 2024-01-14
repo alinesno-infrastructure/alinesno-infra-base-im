@@ -20,7 +20,8 @@
           <el-table-column label="图标" align="center" width="50px" prop="icon" v-if="columns[0].visible">
             <template #default="scope">
               <div class="role-icon">
-                <img :src="'http://data.linesno.com/icons/circle/Delivery boy-' + ((scope.$index + 1)%5 + 1) + '.png'" />
+                <!-- <img :src="'http://data.linesno.com/icons/circle/Delivery boy-' + ((scope.$index + 1)%5 + 1) + '.png'" /> -->
+                <img :src="imagePath(scope.row)" style="width:40px;height:40px;border-radius: 5px"/>
               </div>
             </template>
           </el-table-column>
@@ -179,6 +180,14 @@ function getList() {
   });
 };
 
+/** 显示图片 */
+function imagePath(row){
+  let roleAvatar = '1746435800232665090' ; 
+  if(row.roleAvatar){
+    roleAvatar = row.roleAvatar ; 
+  }
+  return import.meta.env.VITE_APP_BASE_API + "/v1/api/infra/base/im/chat/displayImage/" + roleAvatar ; 
+}
 
 /** 搜索按钮操作 */
 function handleQuery() {

@@ -58,7 +58,7 @@ public class KnowledgeController {
         personDto.setReaderType("html");
         personDto.setBusinessId(IdUtil.getSnowflakeNextId());
         personDto.setDateTime(DateUtil.formatDateTime(new Date()));
-        personDto.setIcon("https://foruda.gitee.com/avatar/1676897721015308137/41655_landonniao_1656075872.png");
+        personDto.setIcon("1746465675916124161") ;
         personDto.setDateTime(DateUtil.formatDateTime(new Date()));
 
         // 上传到知识库角色

@@ -71,14 +71,17 @@ public class ImChatController extends SuperController {
         String preBusinessId = AgentUtils.getPreBusinessId(dtoList)  ;
         long businessId = IdUtil.getSnowflakeNextId(); // 生成一个唯一的业务ID
 
-        // 提交任务给处理服务，让它后台执行处理
-        taskService.addTask(channelId , businessId , roleId , text , preBusinessId);
-
         IndustryRoleDto roleDto = smartAssistantConsumer.getRoleById(roleId)  ;
+
+        // 提交任务给处理服务，让它后台执行处理
+        taskService.addTask(channelId , businessId , roleId , text , preBusinessId , roleDto);
+
         ChatMessageDto personDto = AgentUtils.getChatMessageDto(dtoList, roleDto , businessId , text);
 
         // 保存消息实体
-        messageService.saveChatMessage(dtoList , personDto , channelId , businessId) ;
+//        long receiverId = 1L ; // 当前用户的id
+
+        messageService.saveChatMessage(dtoList , roleDto , personDto , channelId , businessId) ;
         return AjaxResult.success(personDto) ;
     }
 
@@ -151,7 +154,7 @@ public class ImChatController extends SuperController {
             agentInfo.setReaderType("html");
             agentInfo.setBusinessId(IdUtil.getSnowflakeNextId());
             agentInfo.setDateTime(DateUtil.formatDateTime(new Date()));
-            agentInfo.setIcon("http://data.linesno.com/icons/sepcialist/dataset_23.png");
+            agentInfo.setIcon("1746437666131714049");
             agentInfo.setDateTime(DateUtil.formatDateTime(new Date()));
 
             chatMessageDtos.add(agentInfo) ;
@@ -179,7 +182,7 @@ public class ImChatController extends SuperController {
      */
     @GetMapping("/getAllCatalog")
     public AjaxResult getAllCatalog(){
-        return smartAssistantConsumer.allCatalog() ;
+        return AjaxResult.success(smartAssistantConsumer.allCatalog()) ;
     }
 
 
@@ -201,5 +204,7 @@ public class ImChatController extends SuperController {
 
         return ok() ;
     }
+
+
 
 }

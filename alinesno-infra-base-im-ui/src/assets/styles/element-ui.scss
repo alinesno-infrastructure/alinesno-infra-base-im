@@ -1,5 +1,10 @@
 // cover some element-ui styles
 
+.el-upload-list--picture-card , .el-upload--picture-card{
+  --el-upload-list-picture-card-size: 80px !important;
+  --el-upload-picture-card-size: 80px !important ;
+}
+
 .el-breadcrumb__inner,
 .el-breadcrumb__inner a {
   font-weight: 400 !important;

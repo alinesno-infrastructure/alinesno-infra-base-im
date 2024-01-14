@@ -10,6 +10,8 @@ public class IndustryRoleDto {
 
     private Long id ;
 
+    private String roleAvatar; // 角色头像
+
     private String roleName; // 角色名称
 
     private String industry; // 所属行业

@@ -6,11 +6,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.alinesno.infra.base.im.adapter.SmartAssistantConsumer;
 import com.alinesno.infra.base.im.dto.AssistantPromptDto;
 import com.alinesno.infra.base.im.dto.ChatMessageDto;
+import com.alinesno.infra.base.im.dto.IndustryRoleDto;
 import com.alinesno.infra.base.im.dto.MessageQueueDto;
 import com.alinesno.infra.base.im.entity.MessageEntity;
 import com.alinesno.infra.base.im.service.IMessageService;
 import com.alinesno.infra.base.im.service.ITaskService;
 import com.alinesno.infra.common.facade.response.AjaxResult;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,7 @@ import java.util.*;
 @Service
 public class TaskServiceImpl implements ITaskService {
 
-    private static final Map<Long , Long> taskBox = new HashMap<>() ;
+    private static final Map<Long , TaskInfo> taskBox = new HashMap<>() ;
 
     @Autowired
     private IMessageService messageService ;
@@ -31,10 +33,18 @@ public class TaskServiceImpl implements ITaskService {
     private SmartAssistantConsumer assistantConsumer ;
 
     @Override
-    public void addTask(long channelId, long businessId , long roleId, String text, String preBusinessId) {
+    public void addTask(long channelId, long businessId , long roleId, String text, String preBusinessId , IndustryRoleDto roleDto ) {
         log.debug("添加任务实例:messageId = {} , businessId = {}" , channelId , businessId);
 
-        taskBox.put(businessId , channelId) ;
+        TaskInfo taskInfo = new TaskInfo() ;
+
+        taskInfo.setText(text);
+        taskInfo.setBusinessId(businessId) ;
+        taskInfo.setChannelId(channelId);
+        taskInfo.setPreBusinessId(preBusinessId);
+        taskInfo.setRoleDto(roleDto);
+
+        taskBox.put(businessId , taskInfo) ;
 
         // 获取到上一条消息的业务ID
         String assistantContent = null ;
@@ -71,12 +81,17 @@ public class TaskServiceImpl implements ITaskService {
 
         if(!taskBox.isEmpty()){
 
-            Iterator<Map.Entry<Long, Long>> iterator = taskBox.entrySet().iterator();
+            Iterator<Map.Entry<Long, TaskInfo>> iterator = taskBox.entrySet().iterator();
             while (iterator.hasNext()) {
-                Map.Entry<Long, Long> entry = iterator.next();
+                Map.Entry<Long, TaskInfo> entry = iterator.next();
 
                 long businessId = entry.getKey() ;
-                Long channelId = entry.getValue() ;
+                TaskInfo taskInfo = entry.getValue() ;
+
+                long channelId = taskInfo.getChannelId() ;
+                long agentId = taskInfo.getRoleDto().getId() ;
+                String agentName = taskInfo.getRoleDto().getRoleName() ;
+                String agentIcon = taskInfo.getRoleDto().getRoleAvatar() ;
 
                 AjaxResult result = assistantConsumer.queryContent(businessId) ;
                 if(result.get("data") != null){
@@ -89,38 +104,37 @@ public class TaskServiceImpl implements ITaskService {
                         ChatMessageDto dto3 = new ChatMessageDto() ;
                         MessageEntity entity = new MessageEntity() ;
 
-                        String md = "### 罗小东的任务已经处理\n" +
-                                "- 任务: \n" + "请编写关于Ansible的考核题目." + "\n" +
+                        String md = "### 任务已经处理\n" +
                                 "- 业务标识: "+businessId+"\n" +
                                 "- 持续时间: 46秒503\n" +
-                                "- 环境: [测试环境](#)\n" +
-                                "- 内容: [查看生成结果](http://localhost/smart/specialist/index?businessId=1733539703232249856)\n" +
                                 "- 状态: 完成\n" +
-                                "- 完成时间: 2023-12-10 01:31:34\n" +
-                                "- 执行人：培训题设计Agent" ;
+                                "- 完成时间: 2023-12-10 01:31:34\n" ;
 
                         dto3.setChatText(md);
-                        dto3.setName("高级数据库工程师");
+
+                        dto3.setName(agentName);
+                        dto3.setIcon(agentIcon) ;
+
                         dto3.setChannelId(channelId);
                         dto3.setRoleType("agent");
                         dto3.setBusinessId(businessId);
-                        dto3.setIcon("http://data.linesno.com/icons/sepcialist/dataset_23.png");
                         dto3.setDateTime(DateUtil.formatDateTime(new Date()));
 
                         messageList.add(dto3) ;
 
                         entity.setContent(dto3.getChatText().toString()) ;
-                        entity.setName(dto3.getName());
+
+                        entity.setName(agentName);
+                        entity.setIcon(agentIcon) ;
+
                         entity.setRoleType(dto3.getRoleType());
                         entity.setReaderType(dto3.getReaderType());
                         entity.setBusinessId(businessId);
                         entity.setAddTime(new Date()) ;
-                        entity.setIcon("http://data.linesno.com/icons/sepcialist/dataset_23.png");
                         entity.setMessageId(IdUtil.getSnowflakeNextId());
 
-                        entity.setMessageId(IdUtil.getSnowflakeNextId());
                         entity.setChannelId(channelId);
-                        entity.setSenderId(IdUtil.getSnowflakeNextId());
+                        entity.setSenderId(agentId) ;
                         entity.setReceiverId(IdUtil.getSnowflakeNextIdStr());
 
                         messageEntities.add(entity) ;
@@ -140,5 +154,15 @@ public class TaskServiceImpl implements ITaskService {
 
         return messageList ;
 
+    }
+
+    @Data
+    private static class TaskInfo {
+        private long channelId ;
+        private long businessId ;
+        private long roleId ;
+        private String text ;
+        private String preBusinessId ;
+        private IndustryRoleDto roleDto  ;
     }
 }

@@ -10,9 +10,10 @@
       
       <el-scrollbar height="500px">
         <ul style="margin: 0;padding: 0px;list-style: none;">
-          <li v-for="(item, index) in chatChannelTemplate" :key="item" class="channel-item-li">
+          <li v-for="(item, index) in chatChannelTemplate" :key="index" class="channel-item-li">
             <div class="channel-item">
-              <img class="channel-image" :src="'http://data.linesno.com/icons/sepcialist/dataset_' + (index + 5) + '.png'" />
+              <!-- <img class="channel-image" :src="'http://data.linesno.com/icons/sepcialist/dataset_' + (index + 5) + '.png'" /> -->
+              <img class="channel-image" :src="imagePath(item)" />
               <div class="channel-text">
 
                 <span class="channel-type">
@@ -118,6 +119,16 @@ function handleAllPublicChannel(){
     chatChannelTemplate.value = response.data ;
   })
 }
+
+/** 显示图片 */
+function imagePath(row){
+  let roleAvatar = '1746435800232665090' ; 
+  if(row.icon){
+    roleAvatar = row.icon ; 
+  }
+  return import.meta.env.VITE_APP_BASE_API + "/v1/api/infra/base/im/chat/displayImage/" + roleAvatar ; 
+}
+
 
 handleAllPublicChannel();
 

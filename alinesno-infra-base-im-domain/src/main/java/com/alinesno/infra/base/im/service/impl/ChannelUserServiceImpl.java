@@ -1,6 +1,5 @@
 package com.alinesno.infra.base.im.service.impl;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alinesno.infra.base.im.adapter.SmartAssistantConsumer;
 import com.alinesno.infra.base.im.dto.IndustryRoleDto;
 import com.alinesno.infra.base.im.entity.ChannelUserEntity;
@@ -8,7 +7,6 @@ import com.alinesno.infra.base.im.entity.UserEntity;
 import com.alinesno.infra.base.im.mapper.ChannelUserMapper;
 import com.alinesno.infra.base.im.service.IChannelUserService;
 import com.alinesno.infra.common.core.service.impl.IBaseServiceImpl;
-import com.alinesno.infra.common.facade.response.AjaxResult;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -37,15 +35,14 @@ public class ChannelUserServiceImpl extends IBaseServiceImpl<ChannelUserEntity, 
                 .map(ChannelUserEntity::getAccountId)
                 .toList();
 
-        AjaxResult result = smartAssistantConsumer.getAgentListByIds(agentIds) ;
-        List<IndustryRoleDto> list = JSONArray.parseArray(result.get("data")+"" , IndustryRoleDto.class);
-
+        List<IndustryRoleDto> list = smartAssistantConsumer.getAgentListByIds(agentIds) ;
         List<UserEntity> userList = new ArrayList<>() ;
 
         for(IndustryRoleDto dto : list){
 
             UserEntity e =  new UserEntity() ;
             BeanUtils.copyProperties(dto, e);
+            e.setAvatar(dto.getRoleAvatar());
 
             userList.add(e) ;
         }

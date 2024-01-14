@@ -10,7 +10,8 @@
 
         <div class="chat-ai-header" :class="item.roleType == 'person' ? 'say-right-window' : ''">
           <div class="header-images">
-            <img :src="item.icon" />
+            <!-- <img :src="item.icon" /> -->
+            <img :src="imagePath(item)" />
           </div>
         </div>
 
@@ -30,7 +31,7 @@
             <span style="margin-left:10px" :class="item.showTools?'show-tools':'hide-tools'"> {{ item.dateTime }} </span>
           </div>
 
-          <div class="say-message-body markdown-body" :style="item.roleType == 'person' ? 'text-align:right' : ''" v-html="readerHtml(item.chatText)"></div>
+          <div class="say-message-body markdown-body" :style="item.roleType == 'person' ? '' : ''" v-html="readerHtml(item.chatText)"></div>
 
 
           <div class="chat-ai-say-tools" style="margin-top: 3px;;text-align: right;float:right" :class="item.showTools?'show-tools':'hide-tools'">
@@ -83,11 +84,13 @@ const pushMessageList = (mess) => {
     }
   }
 
+  // TODO 从本地store中获取到当前用户信息
   messageList.value.push({ 
     roleType: 'person', 
     businessId: '1733452663532019712' ,  
     dateTime: '2023-12-11 16:32:10' ,  
-    readerType:'html', icon:'https://foruda.gitee.com/avatar/1676897721015308137/41655_landonniao_1656075872.png', 
+    readerType:'html', 
+    icon:'1746465675916124161' , 
     name: '软件工程师罗小东', 
     date: '12-10 13:58:21', 
     chatText: chatText });
@@ -143,6 +146,14 @@ function highlightBlock(str, lang) {
   return `<pre class="code-block-wrapper"><code class="hljs code-block-body ${lang}">${str}</code></pre>`;
 }
 
+/** 显示图片 */
+function imagePath(row){
+  let roleAvatar = '1746435800232665090' ; 
+  if(row.icon){
+    roleAvatar = row.icon ; 
+  }
+  return import.meta.env.VITE_APP_BASE_API + "/v1/api/infra/base/im/chat/displayImage/" + roleAvatar ; 
+}
 
 function readerHtml(chatText) {
   return mdi.render(chatText);

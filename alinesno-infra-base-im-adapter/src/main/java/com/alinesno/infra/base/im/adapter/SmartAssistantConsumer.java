@@ -1,9 +1,6 @@
 package com.alinesno.infra.base.im.adapter;
 
-import com.alinesno.infra.base.im.dto.AssistantPromptDto;
-import com.alinesno.infra.base.im.dto.IndustryRoleDto;
-import com.alinesno.infra.base.im.dto.RobotMessageDto;
-import com.alinesno.infra.base.im.dto.TaskContentDto;
+import com.alinesno.infra.base.im.dto.*;
 import com.alinesno.infra.common.facade.pageable.TableDataInfo;
 import com.alinesno.infra.common.facade.response.AjaxResult;
 import com.dtflys.forest.annotation.*;
@@ -35,7 +32,7 @@ public interface SmartAssistantConsumer {
      * @return
      */
     @Post("/api/infra/smart/assistant/agent/listByIds")
-    AjaxResult getAgentListByIds(@JSONBody List<Long> agentIds)  ;
+    List<IndustryRoleDto> getAgentListByIds(@JSONBody List<Long> agentIds)  ;
 
     /**
      * 获取到详细信息
@@ -50,7 +47,7 @@ public interface SmartAssistantConsumer {
      * @return
      */
     @Get("/api/infra/smart/assistant/agent/allCatalog")
-    AjaxResult allCatalog();
+    List<IndustryRoleCatalogDto> allCatalog();
 
     /**
      * 获取到生成的内容结果

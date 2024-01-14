@@ -3,6 +3,7 @@ package com.alinesno.infra.base.im.service.impl;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import com.alinesno.infra.base.im.dto.ChatMessageDto;
+import com.alinesno.infra.base.im.dto.IndustryRoleDto;
 import com.alinesno.infra.base.im.dto.WebMessageDto;
 import com.alinesno.infra.base.im.entity.MessageEntity;
 import com.alinesno.infra.base.im.enums.MessageType;
@@ -79,10 +80,11 @@ public class MessageServiceImpl extends IBaseServiceImpl<MessageEntity , Message
                 dto.setChatText(e.getContent());
 
                 dto.setName(e.getName());
+                dto.setIcon(e.getIcon());
+
                 dto.setRoleType(e.getRoleType());
                 dto.setReaderType(e.getReaderType());
                 dto.setBusinessId(e.getBusinessId());
-                dto.setIcon(e.getIcon());
                 dto.setDateTime(DateUtil.formatDateTime(e.getAddTime()));
 
                 list.add(dto) ;
@@ -93,7 +95,7 @@ public class MessageServiceImpl extends IBaseServiceImpl<MessageEntity , Message
     }
 
     @Override
-    public void saveChatMessage(List<WebMessageDto> parsedMessages, ChatMessageDto personDto, long channelId , long businessId) {
+    public void saveChatMessage(List<WebMessageDto> parsedMessages, IndustryRoleDto roleDto , ChatMessageDto personDto, long channelId , long businessId) {
         // 处理解析后的消息对象
         StringBuilder receiverId = new StringBuilder();
         for (WebMessageDto message : parsedMessages) {
@@ -122,18 +124,21 @@ public class MessageServiceImpl extends IBaseServiceImpl<MessageEntity , Message
         MessageEntity entity = new MessageEntity() ;
 
         entity.setContent(personDto.getChatText().toString()) ;
+
+        entity.setIcon(personDto.getIcon()) ;
         entity.setName(personDto.getName());
+
         entity.setRoleType(personDto.getRoleType());
         entity.setReaderType(personDto.getReaderType());
         entity.setBusinessId(businessId);
         entity.setAddTime(new Date()) ;
-        entity.setIcon("http://data.linesno.com/icons/sepcialist/dataset_23.png");
-        entity.setMessageId(IdUtil.getSnowflakeNextId());
 
         entity.setMessageId(IdUtil.getSnowflakeNextId());
         entity.setChannelId(channelId);
-        entity.setSenderId(IdUtil.getSnowflakeNextId());
-        entity.setReceiverId(IdUtil.getSnowflakeNextIdStr());
+
+        entity.setSenderId(roleDto.getId()); // 发送者ID
+
+        entity.setReceiverId(receiverId.toString());
 
         save(entity) ;
     }
@@ -149,7 +154,7 @@ public class MessageServiceImpl extends IBaseServiceImpl<MessageEntity , Message
         entity.setReaderType(personDto.getReaderType());
         entity.setBusinessId(IdUtil.getSnowflakeNextId());
         entity.setAddTime(new Date()) ;
-        entity.setIcon("http://data.linesno.com/icons/sepcialist/dataset_23.png");
+        entity.setIcon(personDto.getIcon()) ;
         entity.setMessageId(IdUtil.getSnowflakeNextId());
 
         entity.setMessageId(IdUtil.getSnowflakeNextId());
@@ -169,7 +174,7 @@ public class MessageServiceImpl extends IBaseServiceImpl<MessageEntity , Message
         msg.setChannelId(channelId);
         msg.setSenderId(IdUtil.getSnowflakeNextId());
 
-        msg.setIcon("https://foruda.gitee.com/avatar/1676897721015308137/41655_landonniao_1656075872.png");
+        msg.setIcon("1746465675916124161") ;
         msg.setReaderType("html");
         msg.setRoleType("person");
         msg.setAddTime(new Date());

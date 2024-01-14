@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Random;
 
 @Slf4j
 @Service
@@ -22,18 +21,19 @@ public class ChannelServiceImpl extends IBaseServiceImpl<ChannelEntity, ChannelM
     @Override
     public String createChannel(ChannelEntity entity) {
 
-        // 创建 Random 对象
-        Random random = new Random();
+//        // 创建 Random 对象
+//        Random random = new Random();
+//
+//        // 生成 1 到 60 之间的随机数（包括 1 和 60）
+//        int min = 1;
+//        int max = 60;
+//        int randomNumber = random.nextInt(max - min + 1) + min;
+//
+//        // 打印生成的随机数
+//        log.debug("随机数为: " + randomNumber);
 
-        // 生成 1 到 60 之间的随机数（包括 1 和 60）
-        int min = 1;
-        int max = 60;
-        int randomNumber = random.nextInt(max - min + 1) + min;
+//        entity.setIcon("http://data.linesno.com/icons/sepcialist/dataset_" +randomNumber+ ".png");
 
-        // 打印生成的随机数
-        log.debug("随机数为: " + randomNumber);
-
-        entity.setIcon("http://data.linesno.com/icons/sepcialist/dataset_" +randomNumber+ ".png");
         entity.setChannelId(IdUtil.nanoId());
         entity.setChannelType(entity.getChannelType()) ;
 
@@ -64,22 +64,22 @@ public class ChannelServiceImpl extends IBaseServiceImpl<ChannelEntity, ChannelM
         if(personPublicChannel.isEmpty()){
             ChannelEntity e = new ChannelEntity() ;
 
-            // 创建 Random 对象
-            Random random = new Random();
-
-            // 生成 1 到 60 之间的随机数（包括 1 和 60）
-            int min = 1;
-            int max = 60;
-            int randomNumber = random.nextInt(max - min + 1) + min;
-
-            // 打印生成的随机数
-            log.debug("随机数为: " + randomNumber);
+//            // 创建 Random 对象
+//            Random random = new Random();
+//
+//            // 生成 1 到 60 之间的随机数（包括 1 和 60）
+//            int min = 1;
+//            int max = 60;
+//            int randomNumber = random.nextInt(max - min + 1) + min;
+//
+//            // 打印生成的随机数
+//            log.debug("随机数为: " + randomNumber);
 
             e.setChannelName("个人公共频道");
             e.setChannelDesc("公共频道服务，用于公共交流");
             e.setChannelType(ChannelType.PERSONAL_PUBLIC_CHANNEL.getValue());
 
-            e.setIcon("http://data.linesno.com/icons/sepcialist/dataset_" +randomNumber+ ".png");
+            e.setIcon("1746473582053335042") ;
             e.setChannelId(IdUtil.nanoId());
 
             this.save(e) ;

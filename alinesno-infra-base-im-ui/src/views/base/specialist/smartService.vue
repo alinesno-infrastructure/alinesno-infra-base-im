@@ -7,7 +7,7 @@
           <div class="robot-chat-windows">
             <div class="robot-chat-header">
               <div class="chat-header-title" style="padding-left: 28px;">
-                <img style="width: 25px;height: 25px;border-radius: 5px;position: absolute;left: 10px;" :src="channelInfo.icon" />
+                <img style="width: 25px;height: 25px;border-radius: 5px;position: absolute;left: 10px;" :src="imagePath(channelInfo)" />
                 {{ channelInfo.channelName }} 
               </div>
               <div class="chat-header-desc">
@@ -35,7 +35,8 @@
 
                       <ul v-if="showDropdown" class="mention-dropdown">
                         <li v-for="(user, index) in users" :key="index" @click="mentionUser(user)">
-                          <img style="width:25px;height:25px;border-radius: 5px;position: absolute;" :src="'http://data.linesno.com/icons/sepcialist/dataset_' + (index + 35) + '.png'" />
+                          <!-- <img style="width:25px;height:25px;border-radius: 5px;position: absolute;" :src="'http://data.linesno.com/icons/sepcialist/dataset_' + (index + 35) + '.png'" /> -->
+                          <img style="width:30px;height:30px;border-radius: 5px;position: absolute;" :src="imagePath(user)" />
                           <div style="margin-left: 30px;margin-top: 5px;">
                             {{ user.roleName }}
                           </div>
@@ -219,6 +220,15 @@ const sendMessage = () => {
   message.value = '';
   selectedUsers.value = [];
 };
+
+/** 显示图片 */
+function imagePath(row){
+  let roleAvatar = '1746435800232665090' ; 
+  if(row.icon){
+    roleAvatar = row.icon; 
+  }
+  return import.meta.env.VITE_APP_BASE_API + "/v1/api/infra/base/im/chat/displayImage/" + roleAvatar ; 
+}
 
 /** 同步消息到后端 */
 function handleSendUserMessage(formattedMessage){

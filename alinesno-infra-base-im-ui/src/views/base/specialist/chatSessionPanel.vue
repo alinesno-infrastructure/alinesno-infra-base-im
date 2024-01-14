@@ -15,7 +15,8 @@
         <el-row>
           <el-col :span="5" @click="handleSelectChatChannel(item)" >
             <div class="chatChannel-icon">
-              <img :src="item.icon" style="width:40px;height:40px;border-radius: 5px;" />
+              <img v-if="item.channelType !== '1'" :src="imagePath(item)"  style="width:40px;height:40px;border-radius: 5px;" />
+              <img v-if="item.channelType === '1'" src="http://data.linesno.com/icons/sepcialist/dataset_56.png"  style="width:40px;height:40px;border-radius: 5px;" />
             </div>
           </el-col>
           <el-col :span="19">
@@ -116,7 +117,7 @@ function handleAllMyChannel() {
   const channelId = getParam("channel");
   currentChatChannel.value = channelId ; 
 
-  loading.value = true ; 
+  // loading.value = true ; 
   allMyChannel().then(response => {
     chatChannel.value = response.data;
     loading.value = false; 
@@ -129,6 +130,15 @@ function showTools(item) {
     });
 }
 
+/** 显示图片 */
+function imagePath(row){
+  let roleAvatar = '1746435800232665090' ; 
+  if(row.icon){
+    roleAvatar = row.icon ; 
+  }
+  return import.meta.env.VITE_APP_BASE_API + "/v1/api/infra/base/im/chat/displayImage/" + roleAvatar ; 
+}
+
 function hideTools(item) {
   item.showTools = false; // 鼠标移出时隐藏 tools
 }
@@ -136,15 +146,15 @@ function hideTools(item) {
 handleAllMyChannel();
 
 /** 监听路由变化 */
-// watch(() =>  router.currentRoute.value.path,
-//     (toPath) => {
-//     //要执行的方法
-//     // const channelId = router.currentRoute.value.channelId;
+watch(() =>  router.currentRoute.value.path,
+    (toPath) => {
+    //要执行的方法
+    // const channelId = router.currentRoute.value.channelId;
 
-//     handleAllMyChannel();
+    handleAllMyChannel();
       
-//     },{immediate: true,deep: true}
-// )
+    },{immediate: true,deep: true}
+)
   
 
 </script>

@@ -24,9 +24,12 @@
       
       <el-scrollbar height="400px">
         <ul style="margin: 0;padding: 0px;list-style: none;">
-          <li v-for="(item, index) in chatChannelTemplate" :key="item">
+          <li v-for="(item, index) in chatChannelTemplate" :key="index">
             <div class="channel-item">
+
               <img class="channel-image" :src="'http://data.linesno.com/icons/sepcialist/dataset_' + (index + 5) + '.png'" />
+              <!-- <img class="channel-image" :src="imagePath(item)" /> -->
+
               <div class="channel-text">
                 #{{ item.name }}
               </div>
@@ -49,12 +52,38 @@
           </template>
         </el-page-header>
         <el-form :model="form" :rules="rules" label-position="top" ref="userRef" label-width="80px">
-          <el-row>
+          <!-- <el-row>
               <el-col :span="24">
                 <el-form-item label="频道图标" prop="icon">
                   <el-avatar :size="size" src="http://data.linesno.com/icons/sepcialist/dataset_55.png" />
                 </el-form-item>
               </el-col>
+          </el-row> -->
+          <el-row>
+            <el-col :span="24" class="editor-after-div">
+              <el-form-item
+                  label="头像"
+                  :rules="[{
+                      required: true,
+                      message: '请上传运行效果',
+                      trigger: 'blur',
+                    },]"
+                >
+                  <el-upload
+                    :file-list="fileList"
+                    :action="upload.url + '?type=img&updateSupport=' + upload.updateSupport"
+                    list-type="picture-card"
+                    :auto-upload="true"
+                    :on-success="handleAvatarSuccess"
+                    :before-upload="beforeAvatarUpload"
+                    :headers="upload.headers"
+                    :disabled="upload.isUploading"
+                    :on-progress="handleFileUploadProgress"
+                  >
+                    <el-icon class="avatar-uploader-icon"><Plus /></el-icon>
+                  </el-upload>
+                </el-form-item>
+            </el-col>
           </el-row>
           <el-row>
               <el-col :span="24">
@@ -106,6 +135,7 @@
 <script setup>
 
 let { proxy } = getCurrentInstance();
+import {getToken} from "@/utils/auth";
 import Cookies from 'js-cookie'
 
 import {
@@ -143,12 +173,29 @@ const chatChannelTemplate = ref([
   { id: '6', name: '文档生成频道', desc: '讨论文档生成工具和最佳实践', icon: '' },
 ]);
 
+/*** 应用导入参数 */
+const upload = reactive({
+  // 是否显示弹出层（应用导入）
+  open: false,
+  // 弹出层标题（应用导入）
+  title: "",
+  // 是否禁用上传
+  isUploading: false,
+  // 是否更新已经存在的应用数据
+  updateSupport: 0,
+  // 设置上传的请求头部
+  headers: {Authorization: "Bearer " + getToken()},
+  // 上传的地址
+  url: import.meta.env.VITE_APP_BASE_API + "/v1/api/infra/base/im/chat/importData" 
+});
+
 const goBack = () => {
   showCreateBox.value = true ;
 }
 
 const reset = () => {
   form.value = {
+    icon: null , 
     channelId: undefined,
     channelName: undefined,
     channelDesc: undefined,
@@ -163,6 +210,31 @@ function handleSetChannelId(channelId){
       query: { 'channel': channelId }
   })
   // window.location.reload();
+}
+
+/** 图片上传成功 */
+const handleAvatarSuccess = (response, uploadFile) => {
+  // imageUrl.value = URL.createObjectURL(uploadFile.raw);
+  form.value.icon = response.data ;
+  console.log('form.icon = ' + form.icon);
+};
+
+/** 图片上传之前 */
+const beforeAvatarUpload = (rawFile) => {
+  if (rawFile.size / 1024 / 1024 > 2) {
+    ElMessage.error('Avatar picture size can not exceed 2MB!');
+    return false;
+  }
+  return true;
+};
+
+/** 显示图片 */
+function imagePath(row){
+  let roleAvatar = '1746435800232665090' ; 
+  if(row.icon){
+    roleAvatar = row.icon ; 
+  }
+  return import.meta.env.VITE_APP_BASE_API + "/v1/api/infra/base/im/chat/displayImage/" + roleAvatar ; 
 }
 
 /** 创建频道 */

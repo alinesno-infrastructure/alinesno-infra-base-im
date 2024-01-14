@@ -42,15 +42,18 @@ public class AgentUtils {
 
         // 发送消息给前端
         ChatMessageDto personDto = new ChatMessageDto() ;
-        personDto.setChatText("收到，罗小东的任务我已经在处理，请稍等1-2分钟 :-)");
-        personDto.setName(text);
+        personDto.setChatText("收到，任务我已经在处理，请稍等1-2分钟 :-)");
+
+        personDto.setIcon(roleDto.getRoleAvatar()) ;
+        personDto.setName(roleDto.getRoleName());
+
         personDto.setRoleType("agent");
         personDto.setReaderType("html");
         personDto.setBusinessId(businessId);
+
         personDto.setLoading(true);
         personDto.setDateTime(DateUtil.formatDateTime(new Date()));
-        personDto.setIcon("http://data.linesno.com/icons/sepcialist/dataset_23.png");
-        personDto.setDateTime(DateUtil.formatDateTime(new Date()));
+
         return personDto;
     }
 

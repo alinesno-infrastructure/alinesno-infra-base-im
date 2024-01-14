@@ -1,6 +1,7 @@
 package com.alinesno.infra.base.im.service;
 
 import com.alinesno.infra.base.im.dto.ChatMessageDto;
+import com.alinesno.infra.base.im.dto.IndustryRoleDto;
 import com.alinesno.infra.base.im.dto.WebMessageDto;
 import com.alinesno.infra.base.im.entity.MessageEntity;
 import com.alinesno.infra.common.facade.services.IBaseService;
@@ -30,7 +31,7 @@ public interface IMessageService extends IBaseService<MessageEntity> {
      * @param personDto
      * @param channelId
      */
-    void saveChatMessage(List<WebMessageDto> dtoList, ChatMessageDto personDto, long channelId , long businessId);
+    void saveChatMessage(List<WebMessageDto> dtoList, IndustryRoleDto roleDto , ChatMessageDto personDto, long channelId , long businessId);
 
     /**
      * 保存消息实体
