@@ -1,7 +1,5 @@
 package com.alinesno.infra.base.im;
 
-import com.alinesno.infra.base.im.config.AppConfiguration;
-import org.jim.server.JimServer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -14,12 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class BaseImApplication {
 
 	public static void main(String[] args) throws Exception {
-
-//		JimServer jimServer = AppConfiguration.getJimServer();
 		SpringApplication.run(BaseImApplication.class, args);
-//		jimServer.start();
-
 	}
-
 
 }

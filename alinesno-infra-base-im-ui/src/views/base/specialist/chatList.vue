@@ -22,10 +22,10 @@
           </div>
           <div class="say-message-info" v-else> 
 
-            <div v-if="item.roleType != 'person'" style="float:left;text-align: right;">
+            <!-- <div v-if="item.roleType != 'person'" style="float:left;text-align: right;">
               <el-button v-if="index%2==0" type="primary" link loading size="default"></el-button>
               <el-button v-if="index%2==1" type="primary" link size="default"><el-icon><CircleCheck /></el-icon></el-button>
-            </div>
+            </div> -->
 
             {{ item.name }}  
             <span style="margin-left:10px" :class="item.showTools?'show-tools':'hide-tools'"> {{ item.dateTime }} </span>

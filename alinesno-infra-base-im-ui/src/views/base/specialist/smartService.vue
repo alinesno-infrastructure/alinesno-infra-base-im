@@ -54,15 +54,15 @@
                       </el-button>
                     </el-tooltip>
 
-                    <el-tooltip class="box-item" effect="dark" content="清空频道聊天记录" placement="top" >
-                      <el-button type="warning" text bg size="large" @click="handleEditorContent()" >
-                        <i class="fa-solid fa-pen-nib icon-btn"></i>
-                      </el-button>
-                    </el-tooltip>
-
                     <el-tooltip class="box-item" effect="dark" content="上传文档文件" placement="top" >
                       <el-button type="primary" text bg size="large" @click="handleUploadFile" >
                         <i class="fa-solid fa-file-word icon-btn"></i>
+                      </el-button>
+                    </el-tooltip>
+
+                    <el-tooltip class="box-item" effect="dark" content="查看任务状态" placement="top" >
+                      <el-button type="warning" text bg size="large" @click="taskFlowDialogVisible = true" >
+                        <i class="fa-solid fa-truck-fast"></i>
                       </el-button>
                     </el-tooltip>
 
@@ -102,6 +102,16 @@
       </template>
     </el-dialog>
 
+    <!-- 任务运行状态 -->
+    <el-dialog v-model="taskFlowDialogVisible" title="频道任务运行状态" width="60%" :before-close="handleClose" append-to-body>
+      <AgentTaskFlow />
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button type="warning" @click="taskFlowDialogVisible = false">关闭</el-button>
+        </span>
+      </template>
+    </el-dialog>
+
     <ChatUploadFile ref="uploadChildComp" @handlePushResponseMessageList="handlePushResponseMessageList" />
 
   </div>
@@ -132,6 +142,7 @@ import {
 import { getParam } from '@/utils/ruoyi'
 
 import SmartServiceAgent from './smartServiceAgent';
+import AgentTaskFlow from './agentTaskFlow'
 
 const chatListRef = ref();
 const router = useRouter();
@@ -141,6 +152,7 @@ const loading = ref(false)
 const businessId  = ref("") ;
 const editorLoading = ref(true) ;
 const editDialogVisible = ref(false)
+const taskFlowDialogVisible = ref(true)
 const currentTaskContent = ref("")
 const uploadChildComp = ref(null) 
 
