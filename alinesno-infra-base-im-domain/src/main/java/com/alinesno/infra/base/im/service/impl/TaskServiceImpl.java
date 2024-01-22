@@ -157,6 +157,7 @@ public class TaskServiceImpl implements ITaskService {
         entity.setBusinessId(businessId);
         entity.setAddTime(new Date()) ;
         entity.setMessageId(IdUtil.getSnowflakeNextId());
+        entity.setClassName("result-tip");
 
         entity.setChannelId(channelId);
         entity.setSenderId(agentId) ;
