@@ -51,10 +51,10 @@ public class ImChatController extends SuperController {
     @GetMapping("/chatAssistantContent")
     public AjaxResult chatAssistantContent(long businessId){
 
-        AjaxResult result = smartAssistantConsumer.queryContent(businessId) ; //  smartBrainConsumer.chatContent(businessId) ;
-        log.debug("chatContent result = {}" , result);
+        MessageQueueDto messageQueueDto = smartAssistantConsumer.queryContent(businessId) ; //  smartBrainConsumer.chatContent(businessId) ;
+        log.debug("chatContent result = {}" , messageQueueDto);
 
-        return result ;
+        return AjaxResult.success(messageQueueDto) ;
     }
 
     /**

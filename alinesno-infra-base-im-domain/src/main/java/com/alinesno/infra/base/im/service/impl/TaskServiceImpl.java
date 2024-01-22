@@ -11,7 +11,6 @@ import com.alinesno.infra.base.im.dto.MessageQueueDto;
 import com.alinesno.infra.base.im.entity.MessageEntity;
 import com.alinesno.infra.base.im.service.IMessageService;
 import com.alinesno.infra.base.im.service.ITaskService;
-import com.alinesno.infra.common.facade.response.AjaxResult;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -50,9 +49,7 @@ public class TaskServiceImpl implements ITaskService {
         String assistantContent = null ;
 
         if(StringUtils.isNotBlank(preBusinessId)){
-            AjaxResult result = assistantConsumer.queryContent(Long.parseLong(preBusinessId)) ;
-            MessageQueueDto messageQueueDto = JSONObject.parseObject(result.get("data")+"" , MessageQueueDto.class) ;
-
+            MessageQueueDto messageQueueDto = assistantConsumer.queryContent(Long.parseLong(preBusinessId)) ;
             assistantContent = messageQueueDto.getAssistantContent() ;
         }
 
@@ -89,71 +86,114 @@ public class TaskServiceImpl implements ITaskService {
                 TaskInfo taskInfo = entry.getValue() ;
 
                 long channelId = taskInfo.getChannelId() ;
-                long agentId = taskInfo.getRoleDto().getId() ;
                 String agentName = taskInfo.getRoleDto().getRoleName() ;
                 String agentIcon = taskInfo.getRoleDto().getRoleAvatar() ;
 
-                AjaxResult result = assistantConsumer.queryContent(businessId) ;
-                if(result.get("data") != null){
-                    MessageQueueDto messageQueueDto = JSONObject.parseObject(result.get("data")+"" , MessageQueueDto.class) ;
+                MessageQueueDto messageQueueDto = assistantConsumer.queryContent(businessId) ;
+                if(messageQueueDto != null){
 
                     log.debug("messageQueueDto = {}" , messageQueueDto);
 
                     if(messageQueueDto.getStatus().equals("success")){  // 构建成功.
 
-                        ChatMessageDto dto3 = new ChatMessageDto() ;
+                        ChatMessageDto chatMessageDto = new ChatMessageDto() ;
                         MessageEntity entity = new MessageEntity() ;
 
-                        String md = "### 任务已经处理\n" +
-                                "- 业务标识: "+businessId+"\n" +
-                                "- 持续时间: 46秒503\n" +
-                                "- 状态: 完成\n" +
-                                "- 完成时间: 2023-12-10 01:31:34\n" ;
+                        String linkInfo = getLinkInfo(messageQueueDto , agentName , businessId) ;
 
-                        dto3.setChatText(md);
+                        chatMessageDto.setChatText(linkInfo);
 
-                        dto3.setName(agentName);
-                        dto3.setIcon(agentIcon) ;
+                        chatMessageDto.setName(agentName);
+                        chatMessageDto.setIcon(agentIcon) ;
 
-                        dto3.setChannelId(channelId);
-                        dto3.setRoleType("agent");
-                        dto3.setBusinessId(businessId);
-                        dto3.setDateTime(DateUtil.formatDateTime(new Date()));
+                        chatMessageDto.setChannelId(channelId);
+                        chatMessageDto.setRoleType("agent");
+                        chatMessageDto.setBusinessId(businessId);
+                        chatMessageDto.setDateTime(DateUtil.formatDateTime(new Date()));
+                        chatMessageDto.setClassName("result-tip");
 
-                        messageList.add(dto3) ;
-
-                        entity.setContent(dto3.getChatText().toString()) ;
-
-                        entity.setName(agentName);
-                        entity.setIcon(agentIcon) ;
-
-                        entity.setRoleType(dto3.getRoleType());
-                        entity.setReaderType(dto3.getReaderType());
-                        entity.setBusinessId(businessId);
-                        entity.setAddTime(new Date()) ;
-                        entity.setMessageId(IdUtil.getSnowflakeNextId());
-
-                        entity.setChannelId(channelId);
-                        entity.setSenderId(agentId) ;
-                        entity.setReceiverId(IdUtil.getSnowflakeNextIdStr());
-
-                        messageEntities.add(entity) ;
-
-                        log.debug("完成任务实例:businessId = {}" , businessId);
-
+                        messageList.add(chatMessageDto) ; // 返回前端消息列表
                         iterator.remove(); // 使用Iterator的remove方法来删除元素
+
+                        // 持久化消息
+                        extractedSaveDb(entity, chatMessageDto, taskInfo , messageEntities , businessId);
                     }
                 }
 
-            }
-
-            if(!messageEntities.isEmpty()){
-                messageService.saveBatch(messageEntities) ;
             }
         }
 
         return messageList ;
 
+    }
+
+    /**
+     * 将消息保存到数据库中，进行执久化保存
+     * @param entity
+     * @param chatMessageDto
+     * @param taskInfo
+     * @param messageEntities
+     * @param businessId
+     */
+    private void extractedSaveDb(MessageEntity entity,
+                                 ChatMessageDto chatMessageDto,
+                                 TaskInfo taskInfo,
+                                 List<MessageEntity> messageEntities ,
+                                 long businessId) {
+
+        long channelId = taskInfo.getChannelId() ;
+        long agentId = taskInfo.getRoleDto().getId() ;
+        String agentName = taskInfo.getRoleDto().getRoleName() ;
+        String agentIcon = taskInfo.getRoleDto().getRoleAvatar() ;
+
+        // 消息保存到数据库
+        entity.setContent(chatMessageDto.getChatText().toString()) ;
+
+        entity.setName(agentName);
+        entity.setIcon(agentIcon) ;
+
+        entity.setRoleType(chatMessageDto.getRoleType());
+        entity.setReaderType(chatMessageDto.getReaderType());
+        entity.setBusinessId(businessId);
+        entity.setAddTime(new Date()) ;
+        entity.setMessageId(IdUtil.getSnowflakeNextId());
+
+        entity.setChannelId(channelId);
+        entity.setSenderId(agentId) ;
+        entity.setReceiverId(IdUtil.getSnowflakeNextIdStr());
+
+        messageEntities.add(entity) ;
+
+        log.debug("完成任务实例:businessId = {}" , businessId);
+
+        if(!messageEntities.isEmpty()){
+            messageService.saveBatch(messageEntities) ;
+        }
+    }
+
+    /**
+     * 得到连接类型
+     * @param messageQueueDto
+     * @return
+     */
+    private String getLinkInfo(MessageQueueDto messageQueueDto, String agentName, long businessId) {
+
+        String linkType = messageQueueDto.getLinkType() ;
+        String linkPath = messageQueueDto.getLinkPath() ;
+
+        if(StringUtils.isBlank(linkPath)){
+            linkPath = "#" ;
+        }
+
+        return "### <i class='fa-brands fa-redhat'></i> 任务已经处理\n" +
+                "- 任务: 执行简单业务服务任务类型 \n" +
+                "- 业务标识: " + businessId + "\n" +
+                "- 持续时间: 46秒503\n" +
+                "- <i class='fa-solid fa-file-pdf'></i> 内容: <a href='" + linkPath + "'>查看生成结果</a>\n" +
+                "- <i class='fa-solid fa-vial-circle-check'></i> 状态: 完成\n" +
+                "- <i class='fa-solid fa-hourglass-end'></i> 完成时间: " + DateUtil.now() + "\n" +
+                "- <i class='fa-solid fa-user-secret'></i> 执行人:" + agentName +
+                "\n";
     }
 
     @Data

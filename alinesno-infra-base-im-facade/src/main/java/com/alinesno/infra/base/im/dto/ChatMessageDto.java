@@ -24,4 +24,6 @@ public class ChatMessageDto {
     @JsonSerialize(using = ToStringSerializer.class)
     private long businessId ; // 生成的唯一业务ID标识
 
+    private String className ; // 返回的样式标识
+
 }

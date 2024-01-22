@@ -47,6 +47,10 @@ html.dark {
 }
 
 html {
+  .result-tip{
+    border-top: 3px solid #3b5998;
+  }
+
   .markdown-body {
     color-scheme: light;
     --color-prettylights-syntax-comment: #6e7781;

@@ -31,7 +31,7 @@
             <span style="margin-left:10px" :class="item.showTools?'show-tools':'hide-tools'"> {{ item.dateTime }} </span>
           </div>
 
-          <div class="say-message-body markdown-body" :style="item.roleType == 'person' ? '' : ''" v-html="readerHtml(item.chatText)"></div>
+          <div class="say-message-body markdown-body" :class="item.className" v-html="readerHtml(item.chatText)"></div>
 
 
           <div class="chat-ai-say-tools" style="margin-top: 3px;;text-align: right;float:right" :class="item.showTools?'show-tools':'hide-tools'">
