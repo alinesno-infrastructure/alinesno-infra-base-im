@@ -4,11 +4,11 @@ import com.alinesno.infra.base.im.dto.ChatMessageDto;
 import com.alinesno.infra.base.im.service.ITaskService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -45,7 +45,7 @@ public class SSECronDemo {
      * 任务运行的示例
      */
     @SneakyThrows
-    @Scheduled(cron ="*/1 * * * * ?")
+    @Scheduled(cron ="*/5 * * * * ?")
     public void getTaskNoticeMessage() {
 
         String [] chineseContentArr = {
