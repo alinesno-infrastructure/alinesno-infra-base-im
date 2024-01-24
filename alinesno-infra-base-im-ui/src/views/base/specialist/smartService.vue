@@ -11,7 +11,12 @@
                 {{ channelInfo.channelName }} 
               </div>
               <div class="chat-header-desc">
-                ({{ channelInfo.channelDesc }}) 请确认生成的内容是否正确，请确认是否进入下一步 
+                ({{ channelInfo.channelDesc }}) 
+              </div>
+              <div class="chat-header-desc" style="float: right;margin-top: -10px;">
+                  <el-button type="primary" text bg size="large" @click="taskFlowDialogVisible = true" >
+                    <i class="fa-solid fa-truck-fast icon-btn"></i>
+                  </el-button>
               </div>
             </div>
 
@@ -54,15 +59,15 @@
                       </el-button>
                     </el-tooltip>
 
-                    <el-tooltip class="box-item" effect="dark" content="上传文档文件" placement="top" >
-                      <el-button type="primary" text bg size="large" @click="handleUploadFile" >
-                        <i class="fa-solid fa-file-word icon-btn"></i>
+                    <el-tooltip class="box-item" effect="dark" content="审批重新生成" placement="top" >
+                      <el-button type="warning" text bg size="large" @click="sendMessage('replay')" >
+                        <i class="fa-solid fa-feather icon-btn"></i>
                       </el-button>
                     </el-tooltip>
 
-                    <el-tooltip class="box-item" effect="dark" content="查看任务状态" placement="top" >
-                      <el-button type="warning" text bg size="large" @click="taskFlowDialogVisible = true" >
-                        <i class="fa-solid fa-truck-fast"></i>
+                    <el-tooltip class="box-item" effect="dark" content="上传文档文件" placement="top" >
+                      <el-button type="primary" text bg size="large" @click="handleUploadFile" >
+                        <i class="fa-solid fa-file-word icon-btn"></i>
                       </el-button>
                     </el-tooltip>
 
@@ -103,7 +108,7 @@
     </el-dialog>
 
     <!-- 任务运行状态 -->
-    <el-dialog v-model="taskFlowDialogVisible" title="频道任务运行状态" width="60%" :before-close="handleClose" append-to-body>
+    <el-dialog v-model="taskFlowDialogVisible" title="频道任务运行状态" width="60%" :before-close="handleClose" destroy-on-close append-to-body>
       <AgentTaskFlow />
       <template #footer>
         <span class="dialog-footer">
@@ -132,7 +137,8 @@ import {
 } from '@/api/base/im/robot'
 
 import {
-  getChannel
+  getChannel , 
+  closeChannelSSE 
 } from "@/api/base/im/channel";
 
 import {
@@ -152,7 +158,7 @@ const loading = ref(false)
 const businessId  = ref("") ;
 const editorLoading = ref(true) ;
 const editDialogVisible = ref(false)
-const taskFlowDialogVisible = ref(true)
+const taskFlowDialogVisible = ref(false)
 const currentTaskContent = ref("")
 const uploadChildComp = ref(null) 
 
@@ -177,8 +183,9 @@ const data = reactive({
 const { queryParams, form, rules } = toRefs(data);
 
 const handleClose = () => {
-  dialogVisible.value = false ; 
+  // dialogVisible.value = false ; 
   editDialogVisible.value = false ;
+  taskFlowDialogVisible.value = false ;
 }
 
 
@@ -210,7 +217,7 @@ const mentionUser = (user) => {
   showDropdown.value = false;
 };
 
-const sendMessage = () => {
+const sendMessage = (type) => {
 
   // 判断是否有内容
   if(!message.value){
@@ -227,7 +234,7 @@ const sendMessage = () => {
   chatListRef.value.pushMessageList(formattedMessage);
 
   // 发送消息到后台
-  handleSendUserMessage(formattedMessage) ;
+  handleSendUserMessage(formattedMessage, type) ;
 
   message.value = '';
   selectedUsers.value = [];
@@ -243,10 +250,10 @@ function imagePath(row){
 }
 
 /** 同步消息到后端 */
-function handleSendUserMessage(formattedMessage){
+function handleSendUserMessage(formattedMessage , type){
   const channelId = getParam("channel");
 
-  sendUserMessage(formattedMessage , channelId).then(response => {
+  sendUserMessage(formattedMessage , channelId , type).then(response => {
     chatListRef.value.pushResponseMessageList(response.data);
   })
 }
@@ -378,6 +385,7 @@ function handleGetTaskNotice(){
   const channelId = getParam("channel");
 
   getTaskNotice().then(response => {
+
     const data = response.data ;
     if(data && data.length > 0){
       for(let i = 0 ; i < data.length ; i ++){
@@ -388,28 +396,103 @@ function handleGetTaskNotice(){
         }
       }
     }
+
   })
 }
 
-/** 获取定时任务服务 */
-let timer = null;
-onMounted(() => {
-  timer = setInterval(() => {
-    handleGetTaskNotice() ;
-  }, 10*1000);
-})
+/** 连接sse后台 */
+let evtSource = ref(null) ;
 
-/** 任务实例销毁 */
+const initEventSource = () =>{
+  if (typeof (EventSource) !== 'undefined') {
+
+    let channelId = getParam("channel");
+    console.log('channelId = ' + channelId) ; 
+
+    let ssePath = import.meta.env.VITE_APP_BASE_API + "/v1/api/infra/base/im/sseChannelTask/createSseConnect?channel=" + channelId + '&type=message' ; 
+    evtSource = new EventSource(ssePath , { withCredentials: false }) // 后端接口，要配置允许跨域属性
+
+    // 与事件源的连接刚打开时触发
+    evtSource.onopen = function(e){
+      console.log(e);
+    }
+
+    // 当从事件源接收到数据时触发
+    evtSource.onmessage = function(e){
+      console.log(e.data);
+
+      let channelId = getParam("channel");
+      console.log('channelId = ' + channelId) ; 
+
+      if(e.data){
+        const data = JSON.parse(e.data) ; 
+        if(data && data.length > 0){
+          for(let i = 0 ; i < data.length ; i ++){
+            const messageChannelId = data[i].channelId ; 
+
+            if(parseInt(channelId) == messageChannelId){
+              chatListRef.value.pushResponseMessageList(data[i]);
+            }
+          }
+        }
+      }
+
+      // initChatBoxScroll();
+    }
+    // 与事件源的连接无法打开时触发
+    evtSource.onerror = function(e){
+      console.log(e);
+      evtSource.close(); // 关闭连接
+    }
+    // 也可以侦听命名事件，即自定义的事件
+    evtSource.addEventListener('msg', function(e) {
+      console.log(e.data)
+    })
+  } else {
+    console.log('当前浏览器不支持使用EventSource接收服务器推送事件!');
+  }
+  
+}
+
+onMounted(() => {
+  // 在组件加载完成后执行的代码
+  console.log('Component mounted');
+  initEventSource() ;
+});
+
 onBeforeUnmount(() => {
-  clearInterval(timer)
-  timer = null;
-})
+  // 在组件卸载之前执行的代码
+  console.log('Component about to be unmounted');
+  let channelId = getParam("channel");
+  console.log('channelId = ' + channelId) ; 
+
+  closeChannelSSE(channelId).then(resp => {
+    console.log('close channel = ' + channelId) ;
+  })
+
+});
+
+// /** 获取定时任务服务 */
+// let timer = null;
+// onMounted(() => {
+//   timer = setInterval(() => {
+//     handleGetTaskNotice() ;
+//   }, 10*1000);
+// })
+
+// /** 任务实例销毁 */
+// onBeforeUnmount(() => {
+//   clearInterval(timer)
+//   timer = null;
+// })
 
 /** 监听路由变化 */
 watch(() =>  router.currentRoute.value.path,
     (toPath) => {
     //要执行的方法
     const channelId = getParam("channel");
+
+    // initEventSource() ;
 
     handleGetChannel(channelId);
     handleChatMessage(channelId) ;

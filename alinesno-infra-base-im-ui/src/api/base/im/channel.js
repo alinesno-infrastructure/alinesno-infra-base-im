@@ -22,6 +22,15 @@ var managerUrl = {
   allPublicChannel: prefix + "allPublicChannel" ,
   joinChannel: prefix + "joinChannel" ,
   getDefaultChannelId: prefix + "getDefaultChannelId" ,
+  closeChannelSSE: "/v1/api/infra/base/im/sseChannelTask/closeSseConnect" ,
+}
+
+// 关闭频道SSE
+export function closeChannelSSE(channel , type){
+  return request({
+    url: managerUrl.closeChannelSSE + '?channel=' + channel + '&type=' + type, 
+    method: 'get'
+  })
 }
 
 // 获取默认频道 

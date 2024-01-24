@@ -41,9 +41,9 @@ export function getTaskNotice(){
 }
 
 // 客户端发送消息 
-export function sendUserMessage(data , channelId) {
+export function sendUserMessage(data , channelId , type) {
   return request({
-    url: managerUrl.sendUserMessage + "?channelId=" + parseStrEmpty(channelId) , 
+    url: managerUrl.sendUserMessage + "?channelId=" + parseStrEmpty(channelId) + '&type=' + type , 
     data: data,
     method: 'post'
   })

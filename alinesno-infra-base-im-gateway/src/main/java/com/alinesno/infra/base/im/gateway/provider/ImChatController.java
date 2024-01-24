@@ -62,7 +62,7 @@ public class ImChatController extends SuperController {
      * @return
      */
     @PostMapping("/sendUserMessage")
-    public AjaxResult sendUserMessage(@RequestBody List<WebMessageDto> dtoList , long channelId){
+    public AjaxResult sendUserMessage(@RequestBody List<WebMessageDto> dtoList , long channelId , String type){
 
         log.debug("dtoList = {}" , JSONObject.toJSONString(dtoList));
 
