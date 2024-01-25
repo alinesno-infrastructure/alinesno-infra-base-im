@@ -193,7 +193,7 @@ const message = ref('');
 let users = [] ;
 
 const channelInfo = ref({
-  icon: 'http://data.linesno.com/icons/sepcialist/dataset_8.png' ,
+  icon: '1746473582053335042' ,
   channelName: '公共频道' , 
   channelDesc : '公共频道' , 
 })
@@ -406,10 +406,7 @@ let evtSource = ref(null) ;
 const initEventSource = () =>{
   if (typeof (EventSource) !== 'undefined') {
 
-    let channelId = getParam("channel");
-    console.log('channelId = ' + channelId) ; 
-
-    let ssePath = import.meta.env.VITE_APP_BASE_API + "/v1/api/infra/base/im/sseChannelTask/createSseConnect?channel=" + channelId + '&type=message' ; 
+    let ssePath = import.meta.env.VITE_APP_BASE_API + "/v1/api/infra/base/im/sseChannelTask/createSseConnect?type=message" ; 
     evtSource = new EventSource(ssePath , { withCredentials: false }) // 后端接口，要配置允许跨域属性
 
     // 与事件源的连接刚打开时触发

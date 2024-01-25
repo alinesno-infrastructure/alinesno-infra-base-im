@@ -23,18 +23,16 @@ public class SSEChannelTaskController {
 
     @Autowired
     private SSEUtils sseUtils;
- 
- 
+
     @GetMapping(value = "/createSseConnect", produces="text/event-stream;charset=UTF-8")
-    public SseEmitter createSseConnect(@RequestParam(name = "channel", required = false) Long channel , String type) {
-        log.debug("连接频道:{}" , channel);
-        return sseUtils.connect(getPre(type , channel));
+    public SseEmitter createSseConnect(String type) {
+        log.debug("连接频道:{}" , type);
+        return sseUtils.connect(getPre(type));
     }
 
-
     @PostMapping("/sendSseMessage")
-    public void sendSseMessage(@RequestParam("channel") Long channel, @RequestParam("message")  String message , String type){
-        boolean isSend =  sseUtils.sendSseMessage(getPre(type , channel), "123456789", message);
+    public void sendSseMessage(@RequestParam("message")  String message , String type){
+        boolean isSend =  sseUtils.sendSseMessage(getPre(type), "123456789", message);
         log.debug("is Send message = {}" , isSend);
     }
  
@@ -48,14 +46,13 @@ public class SSEChannelTaskController {
     /**
      * 关闭SSE连接
      *
-     * @param channel 客户端ID
      **/
     @GetMapping("/closeSseConnect")
-    public AjaxResult closeSseConnect(Long channel , String type) {
+    public AjaxResult closeSseConnect(String type) {
 
-        log.debug("closeSseConnect = {}" , channel);
+        log.debug("closeSseConnect = {}" , type);
 
-        sseUtils.deleteChannel(getPre(type ,channel));
+        sseUtils.deleteChannel(getPre(type));
         return AjaxResult.success();
     }
 
@@ -64,7 +61,7 @@ public class SSEChannelTaskController {
      * @param type
      * @return
      */
-    private String getPre(String type , Long channel) {
+    private String getPre(String type) {
         if("task".equals(type)){
             return CHANNEL_TASK_PRE ;
         } else if("message".equals(type)){
