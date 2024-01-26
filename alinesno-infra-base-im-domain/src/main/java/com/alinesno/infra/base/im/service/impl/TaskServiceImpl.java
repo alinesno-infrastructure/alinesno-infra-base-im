@@ -4,10 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.alinesno.infra.base.im.adapter.SmartAssistantConsumer;
-import com.alinesno.infra.base.im.dto.AssistantPromptDto;
-import com.alinesno.infra.base.im.dto.ChatMessageDto;
-import com.alinesno.infra.base.im.dto.IndustryRoleDto;
-import com.alinesno.infra.base.im.dto.MessageQueueDto;
+import com.alinesno.infra.base.im.dto.*;
 import com.alinesno.infra.base.im.entity.MessageEntity;
 import com.alinesno.infra.base.im.service.IMessageService;
 import com.alinesno.infra.base.im.service.ITaskService;
@@ -30,6 +27,26 @@ public class TaskServiceImpl implements ITaskService {
 
     @Autowired
     private SmartAssistantConsumer assistantConsumer ;
+
+    @Override
+    public List<TableItem> getFlowTaskNotice() {
+
+        List<TableItem> taskFlowItem = new ArrayList<>() ;
+
+        if(!flowTaskBox.isEmpty()){
+
+            Iterator<Map.Entry<Long, TableItem>> iterator = flowTaskBox.entrySet().iterator();
+            while (iterator.hasNext()) {
+
+                Map.Entry<Long, TableItem> entry = iterator.next();
+                taskFlowItem.add(entry.getValue()) ;
+
+                iterator.remove(); // 使用Iterator的remove方法来删除元素
+            }
+        }
+
+        return taskFlowItem ;
+    }
 
     @Override
     public void addTask(long channelId, long businessId , long roleId, String text, String preBusinessId , IndustryRoleDto roleDto ) {

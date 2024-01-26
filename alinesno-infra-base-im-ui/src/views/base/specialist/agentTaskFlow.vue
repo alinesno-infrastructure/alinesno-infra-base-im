@@ -35,7 +35,8 @@ import { nextTick } from 'vue'
 import { getParam } from '@/utils/ruoyi'
 
 import {
-  closeChannelSSE 
+  closeChannelSSE  ,
+  getFlowTaskNotice
 } from "@/api/base/im/channel";
 
 // 滚动条的处理_starter
@@ -110,25 +111,81 @@ function initChatBoxScroll() {
   })
 }
 
-onMounted(() => {
-  // 在组件加载完成后执行的代码
-  console.log('Component mounted');
-  initEventSource() ;
-});
+// onMounted(() => {
+//   // 在组件加载完成后执行的代码
+//   console.log('Component mounted');
+//   initEventSource() ;
+// });
 
-onBeforeUnmount(() => {
-  // 在组件卸载之前执行的代码
-  console.log('Component about to be unmounted');
-  evtSource.close(); // 关闭连接
+// onBeforeUnmount(() => {
+//   // 在组件卸载之前执行的代码
+//   console.log('Component about to be unmounted');
+//   evtSource.close(); // 关闭连接
 
-  let channelId = getParam("channel");
-  console.log('channelId = ' + channelId) ; 
+//   let channelId = getParam("channel");
+//   console.log('channelId = ' + channelId) ; 
 
-  closeChannelSSE(channelId).then(resp => {
-    console.log('close channel = ' + channelId) ;
+//   closeChannelSSE(channelId).then(resp => {
+//     console.log('close channel = ' + channelId) ;
+//   })
+
+// });
+
+/** 获取到当前执行中的任务消息 */
+function handleFlowTaskNotice(){
+
+  const channelId = getParam("channel");
+
+  getFlowTaskNotice().then(response => {
+
+    const data = response.data ;
+    console.log('data = ' + data) ;
+
+    if(data && data.length > 0){
+      for(let i = 0 ; i < data.length ; i ++){
+        const messageChannelId = data[i].channelId ; 
+
+          // 插入测试数据
+          tableData.value.splice(tableData.value.length, 0, data[i]) ; 
+
+          // 保留最后100条数据，删除多余数据
+          if (tableData.value.length > 20) {
+              tableData.value.splice(0, tableData.value.length - 20);
+          }
+
+        // if(parseInt(channelId) == messageChannelId){
+
+        //   // 插入测试数据
+        //   tableData.value.splice(tableData.value.length, 0, data[i]) ; 
+
+        //   // 保留最后100条数据，删除多余数据
+        //   if (tableData.value.length > 20) {
+        //       tableData.value.splice(0, tableData.value.length - 20);
+        //   }
+        // }
+
+      }
+
+      initChatBoxScroll();
+    }
+
   })
+}
 
-});
+
+/** 获取定时任务服务 */
+let timer = null;
+onMounted(() => {
+   timer = setInterval(() => {
+     handleFlowTaskNotice() ;
+   }, 1*1000);
+})
+
+/** 任务实例销毁 */
+onBeforeUnmount(() => {
+   clearInterval(timer)
+   timer = null;
+})
 
 </script>
 

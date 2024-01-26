@@ -132,6 +132,15 @@ public class ImChatController extends SuperController {
         return AjaxResult.success("查询成功" , taskService.getTaskMessage()) ;
     }
 
+    /**
+     * 轮训任务运行状态，这里假设并发不高的情况下执行
+     * TODO 后续再进一步优化
+     * @return
+     */
+    @GetMapping("/getFlowTaskNotice")
+    public AjaxResult getFlowTaskNotice(){
+        return AjaxResult.success("查询成功" , taskService.getFlowTaskNotice()) ;
+    }
 
     /**
      * 获取到消息信息

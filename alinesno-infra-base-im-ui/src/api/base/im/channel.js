@@ -23,6 +23,15 @@ var managerUrl = {
   joinChannel: prefix + "joinChannel" ,
   getDefaultChannelId: prefix + "getDefaultChannelId" ,
   closeChannelSSE: "/v1/api/infra/base/im/sseChannelTask/closeSseConnect" ,
+  getFlowTaskNotice: "/v1/api/infra/base/im/chat/getFlowTaskNotice" ,
+}
+
+// 获取任务实例完成通知
+export function getFlowTaskNotice(){
+  return request({
+    url: managerUrl.getFlowTaskNotice , 
+    method: 'get'
+  })
 }
 
 // 关闭频道SSE
