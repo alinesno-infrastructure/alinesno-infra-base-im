@@ -1,15 +1,10 @@
 package com.alinesno.infra.base.im.gateway.utils;
 
-import com.alinesno.infra.base.im.dto.ChatMessageDto;
 import com.alinesno.infra.base.im.service.ITaskService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * 示例数据
@@ -26,15 +21,15 @@ public class SSECronDemo {
 
     private final static ObjectMapper mapper = new ObjectMapper();
 
-    /**
-     * 消息定时写回前端项目配置
-     */
-    @SneakyThrows
-    @Scheduled(cron ="*/2 * * * * ?")
-    public void getNoticeMessage() {
-        List<ChatMessageDto> chatMessageDtos = taskService.getTaskMessage() ;
-        redisStreamPushUtils.pushMessage(mapper.writeValueAsString(chatMessageDtos));
-    }
+//    /**
+//     * 消息定时写回前端项目配置
+//     */
+//    @SneakyThrows
+//    @Scheduled(cron ="*/2 * * * * ?")
+//    public void getNoticeMessage() {
+//        List<ChatMessageDto> chatMessageDtos = taskService.getTaskMessage() ;
+//        redisStreamPushUtils.pushMessage(mapper.writeValueAsString(chatMessageDtos));
+//    }
 
 //    /**
 //     * 任务运行的示例

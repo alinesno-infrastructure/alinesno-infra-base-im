@@ -451,37 +451,36 @@ const initEventSource = () =>{
   
 }
 
-onMounted(() => {
-  // 在组件加载完成后执行的代码
-  console.log('Component mounted');
-  initEventSource() ;
-});
-
-onBeforeUnmount(() => {
-  // 在组件卸载之前执行的代码
-  console.log('Component about to be unmounted');
-  let channelId = getParam("channel");
-  console.log('channelId = ' + channelId) ; 
-
-  closeChannelSSE(channelId).then(resp => {
-    console.log('close channel = ' + channelId) ;
-  })
-
-});
-
-// /** 获取定时任务服务 */
-// let timer = null;
 // onMounted(() => {
-//   timer = setInterval(() => {
-//     handleGetTaskNotice() ;
-//   }, 10*1000);
-// })
+//   // 在组件加载完成后执行的代码
+//   console.log('Component mounted');
+//   initEventSource() ;
+// });
 
-// /** 任务实例销毁 */
 // onBeforeUnmount(() => {
-//   clearInterval(timer)
-//   timer = null;
-// })
+//   // 在组件卸载之前执行的代码
+//   console.log('Component about to be unmounted');
+//   let channelId = getParam("channel");
+//   console.log('channelId = ' + channelId) ; 
+
+//   closeChannelSSE(channelId).then(resp => {
+//     console.log('close channel = ' + channelId) ;
+//   })
+// });
+
+/** 获取定时任务服务 */
+let timer = null;
+onMounted(() => {
+   timer = setInterval(() => {
+     handleGetTaskNotice() ;
+   }, 2*1000);
+})
+
+/** 任务实例销毁 */
+onBeforeUnmount(() => {
+   clearInterval(timer)
+   timer = null;
+})
 
 /** 监听路由变化 */
 watch(() =>  router.currentRoute.value.path,

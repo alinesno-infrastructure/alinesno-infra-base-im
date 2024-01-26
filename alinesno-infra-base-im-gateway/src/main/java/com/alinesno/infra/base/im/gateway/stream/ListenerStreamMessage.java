@@ -7,6 +7,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.stream.StreamListener;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 /**
  * 监听远行的消息和任务
  */
@@ -25,17 +27,16 @@ public class ListenerStreamMessage implements StreamListener<String, MapRecord<S
 
         log.info(">>>>>>>>>>>>>>>>>>>>>> 接受到来自redis stream 的消息");
 
-        log.debug("message id = {}" , entries.getId());
-        log.debug("stream =  {}" , entries.getStream());
-        log.debug("body = {}" ,entries.getValue().get("payload"));
+        log.debug("--->> message id = {}" , entries.getId());
+        log.debug("--->> stream =  {}" , entries.getStream());
+        log.debug("--->> body = {}" ,entries.getValue().get("payload"));
 
         // 处理任务消息
-        if(entries.getStream().equals(StreamConstants.IM_TASK_LOG)){
+        if(Objects.equals(entries.getStream(), StreamConstants.IM_TASK_LOG)){
             eventMessage.handleTaskMessage(entries) ;
-        }else if(entries.getStream().equals(StreamConstants.IM_MESSAGE_LOG)){  // 处理业务返回消息
+        }else if(Objects.equals(entries.getStream(), StreamConstants.IM_MESSAGE_LOG)){  // 处理业务返回消息
             eventMessage.handleResultMessage(entries) ;
         }
-
 
         redisTemplate.opsForStream().delete(StreamConstants.STREAM_NAME ,  entries.getId().getValue());
     }
