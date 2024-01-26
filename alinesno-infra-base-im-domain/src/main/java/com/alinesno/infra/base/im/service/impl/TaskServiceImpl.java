@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alinesno.infra.base.im.adapter.SmartAssistantConsumer;
 import com.alinesno.infra.base.im.dto.*;
 import com.alinesno.infra.base.im.entity.MessageEntity;
+import com.alinesno.infra.base.im.enums.TaskStatusEnums;
 import com.alinesno.infra.base.im.service.IMessageService;
 import com.alinesno.infra.base.im.service.ITaskService;
 import lombok.Data;
@@ -111,6 +112,9 @@ public class TaskServiceImpl implements ITaskService {
 
                     log.debug("messageQueueDto = {}" , messageQueueDto);
 
+                    // 发送到构建查询动态
+                    pushMessageInfo(taskInfo , messageQueueDto) ;
+
                     if(messageQueueDto.getStatus().equals("success")){  // 构建成功.
 
                         ChatMessageDto chatMessageDto = new ChatMessageDto() ;
@@ -142,6 +146,32 @@ public class TaskServiceImpl implements ITaskService {
 
         return messageList ;
 
+    }
+
+    /**
+     * 推送到频道消息界面
+     * @param taskInfo
+     * @param messageQueueDto
+     */
+    private void pushMessageInfo(TaskInfo taskInfo, MessageQueueDto messageQueueDto) {
+
+        long channelId = taskInfo.getChannelId() ;
+        String agentName = taskInfo.getRoleDto().getRoleName() ;
+
+        TableItem tableItem = new TableItem() ;
+
+        tableItem.setTaskStatus(TaskStatusEnums.PROCESSING.getValue());
+        tableItem.setBusinessId(taskInfo.getBusinessId()+"");
+        tableItem.setChannel(channelId+"");
+        tableItem.setTaskType("message");
+        tableItem.setTaskName(agentName + "构建任务["+ taskInfo.businessId+"]");
+        tableItem.setAssistantContent(messageQueueDto.getAssistantContent());
+        tableItem.setUsageTime("13毫秒");
+
+        long id = IdUtil.getSnowflakeNextId() ;
+        log.debug("添加item:{} , 值:{}" , id , tableItem);
+
+        ITaskService.flowTaskBox.put(id , tableItem) ;
     }
 
     /**

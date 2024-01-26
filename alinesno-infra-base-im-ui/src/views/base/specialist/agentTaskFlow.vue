@@ -149,9 +149,9 @@ function handleFlowTaskNotice(){
           tableData.value.splice(tableData.value.length, 0, data[i]) ; 
 
           // 保留最后100条数据，删除多余数据
-          if (tableData.value.length > 20) {
-              tableData.value.splice(0, tableData.value.length - 20);
-          }
+          // if (tableData.value.length > 20) {
+          //     tableData.value.splice(0, tableData.value.length - 20);
+          // }
 
         // if(parseInt(channelId) == messageChannelId){
 
