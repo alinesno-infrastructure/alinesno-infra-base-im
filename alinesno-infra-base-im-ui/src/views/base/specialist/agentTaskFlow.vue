@@ -178,7 +178,7 @@ let timer = null;
 onMounted(() => {
    timer = setInterval(() => {
      handleFlowTaskNotice() ;
-   }, 1*1000);
+   }, 5*1000);
 })
 
 /** 任务实例销毁 */

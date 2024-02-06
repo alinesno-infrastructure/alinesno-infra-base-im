@@ -473,7 +473,7 @@ let timer = null;
 onMounted(() => {
    timer = setInterval(() => {
      handleGetTaskNotice() ;
-   }, 2*1000);
+   }, 5*1000);
 })
 
 /** 任务实例销毁 */

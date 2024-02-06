@@ -52,8 +52,8 @@ const router = useRouter();
 const menuItems = ref([
   {id:'5' , icon:'fa-brands fa-wordpress' , link:'/chat' , desc:'聊天信息'},
   { id: '3', icon: 'fa-solid fa-masks-theater', link: '/agentList', desc: '角色列表' },
-  {id:'4' , icon:'fa-brands fa-skype' , link:'/serviceProduct' , desc:'执行器管理'},
-  {id:'7' , icon:'fa-solid fa-chart-simple' , link:'/executeRecord' , desc:'执行记录'},
+  // {id:'4' , icon:'fa-brands fa-skype' , link:'/serviceProduct' , desc:'执行器管理'},
+  // {id:'7' , icon:'fa-solid fa-chart-simple' , link:'/executeRecord' , desc:'执行记录'},
   // {id:'8' , icon:'fa-solid fa-file-pdf' , link:'/brain/loaderData/index' , desc:'知识库管理'},
 ]);
 
